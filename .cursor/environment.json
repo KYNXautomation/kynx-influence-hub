@@ -1,0 +1,5 @@
+{
+  "name": "Kynx Influence Hub",
+  "install": "if [ -f package-lock.json ]; then npm ci; fi",
+  "start": "if [ -f package.json ]; then exec npm run dev -- --hostname 0.0.0.0 --port 3000; fi"
+}
