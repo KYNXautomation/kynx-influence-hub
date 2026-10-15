@@ -1,8 +1,12 @@
-import { Workspace } from "../layout";
-import { listCampaigns } from "../../lib/db";
+"use client";
+
+import Link from "next/link";
+import { Workspace } from "../../components/Workspace";
+import { useLedger } from "../../lib/useLedger";
 import { formatFollowers, formatNumber } from "../../lib/format";
 
 export default function CampaignsPage() {
+  const { listCampaigns } = useLedger();
   const campaigns = listCampaigns();
 
   return (
@@ -16,7 +20,7 @@ export default function CampaignsPage() {
         {campaigns.map((campaign) => (
           <article key={campaign.id} className="campaign-row">
             <div>
-              <h3><a href={`/campaigns/${campaign.id}`}>{campaign.name}</a></h3>
+              <h3><Link href={`/campaigns/${campaign.id}`}>{campaign.name}</Link></h3>
               <p className="meta">{campaign.client_name}</p>
             </div>
             <div>
@@ -28,9 +32,9 @@ export default function CampaignsPage() {
               <p className="meta">{campaign.post_count} documented posts</p>
             </div>
             <div className="actions">
-              <a href={`/creators?niche=${encodeURIComponent(campaign.niche)}&min=${campaign.min_tiktok_followers}&from=${campaign.id}`}>
+              <Link href={{ pathname: "/creators", query: { niche: campaign.niche, min: campaign.min_tiktok_followers, from: campaign.id } }}>
                 Find creators
-              </a>
+              </Link>
             </div>
           </article>
         ))}

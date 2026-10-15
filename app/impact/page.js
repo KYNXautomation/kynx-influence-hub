@@ -1,8 +1,12 @@
-import { Workspace } from "../layout";
-import { listImpact } from "../../lib/db";
+"use client";
+
+import Link from "next/link";
+import { Workspace } from "../../components/Workspace";
+import { useLedger } from "../../lib/useLedger";
 import { formatDate, formatNumber } from "../../lib/format";
 
 export default function ImpactPage() {
+  const { listImpact } = useLedger();
   const clients = listImpact();
   const total = clients.reduce((sum, client) => sum + client.views, 0);
 
@@ -58,7 +62,7 @@ export default function ImpactPage() {
                           <span className="handle">{formatDate(post.published_on)} · {post.platform}</span>
                         </span>
                       </td>
-                      <td><a href={`/campaigns/${post.campaign_id}`}>{post.campaign_name}</a></td>
+                      <td><Link href={`/campaigns/${post.campaign_id}`}>{post.campaign_name}</Link></td>
                       <td>@{post.handle}</td>
                       <td className="num">{formatNumber(post.views)}</td>
                     </tr>

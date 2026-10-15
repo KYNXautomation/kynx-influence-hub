@@ -1,8 +1,12 @@
-import { Workspace } from "./layout";
-import { listCampaigns, overviewStats } from "../lib/db";
+"use client";
+
+import Link from "next/link";
+import { Workspace } from "../components/Workspace";
+import { useLedger } from "../lib/useLedger";
 import { formatFollowers, formatNumber } from "../lib/format";
 
 export default function HomePage() {
+  const { overviewStats, listCampaigns } = useLedger();
   const stats = overviewStats();
   const campaigns = listCampaigns();
 
@@ -31,7 +35,7 @@ export default function HomePage() {
       </section>
       <div className="section-label">
         <h2>Campaigns</h2>
-        <a href="/impact">Client view ledger</a>
+        <Link href="/impact">Client view ledger</Link>
       </div>
       <div className="campaign-list">
         {campaigns.map((campaign) => (
@@ -49,10 +53,10 @@ export default function HomePage() {
               <p className="meta">{campaign.post_count} posts</p>
             </div>
             <div className="actions">
-              <a href={`/creators?niche=${encodeURIComponent(campaign.niche)}&min=${campaign.min_tiktok_followers}&from=${campaign.id}`}>
+              <Link href={{ pathname: "/creators", query: { niche: campaign.niche, min: campaign.min_tiktok_followers, from: campaign.id } }}>
                 Find creators
-              </a>
-              <a href={`/campaigns/${campaign.id}`}>Open</a>
+              </Link>
+              <Link href={`/campaigns/${campaign.id}`}>Open</Link>
             </div>
           </article>
         ))}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Wordmark } from "./Wordmark";
 
 const links = [
@@ -15,12 +16,12 @@ export function Shell({ active, children }) {
         <p className="tagline">Structured Influence. Scalable Impact.</p>
         <nav className="nav" aria-label="Workspace">
           {links.map(([href, label]) => (
-            <a key={href} href={href} className={active === href ? "active" : undefined}>
+            <Link key={href} href={href} className={active === href ? "active" : undefined}>
               {label}
-            </a>
+            </Link>
           ))}
         </nav>
-        <p className="side-note">Internal roster · sample records</p>
+        <p className="side-note">Sample records · this browser</p>
       </aside>
       <main className="main">{children}</main>
     </div>

@@ -1,27 +1,60 @@
-import { Workspace } from "../layout";
-import { getCampaign, listCreators, listNiches } from "../../lib/db";
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Workspace } from "../../components/Workspace";
+import { useLedger } from "../../lib/useLedger";
+import { href } from "../../lib/paths";
 import { formatFollowers, formatNumber, formatPeso } from "../../lib/format";
 
 function numberParam(value, fallback) {
-  if (value === undefined || value === "") return fallback;
+  if (value === undefined || value === null || value === "") return fallback;
   const number = Number(value);
   return Number.isFinite(number) ? number : fallback;
 }
 
-export default async function CreatorsPage({ searchParams }) {
-  const params = await searchParams;
-  const niche = String(params.niche || "");
-  const q = String(params.q || "");
-  const sort = String(params.sort || "followers_desc");
-  let min = numberParam(params.min, 0);
-  let max = numberParam(params.max, 100_000_000);
+function CreatorsBrowser() {
+  const router = useRouter();
+  const [params, setParams] = useState(new URLSearchParams());
+
+  useEffect(() => {
+    setParams(new URLSearchParams(window.location.search));
+  }, []);
+  const { listCreators, listNiches, getCampaign } = useLedger();
+  const niche = params.get("niche") || "";
+  const q = params.get("q") || "";
+  const sort = params.get("sort") || "followers_desc";
+  let min = numberParam(params.get("min"), 0);
+  let max = numberParam(params.get("max"), 100_000_000);
   if (min > max) [min, max] = [max, min];
-  const from = numberParam(params.from, 0);
+  const from = numberParam(params.get("from"), 0);
   const campaign = from ? getCampaign(from) : null;
   const niches = listNiches();
   const creators = listCreators({ niche, min, max, q, sort });
   const minLabel = min > 0 ? `${formatFollowers(min)}+` : "any reach";
   const nicheLabel = niche || "every niche";
+
+  function applyFilters(event) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const query = { sort: String(data.get("sort") || "followers_desc") };
+    const search = String(data.get("q") || "").trim();
+    const selectedNiche = String(data.get("niche") || "");
+    const minimum = String(data.get("min") || "");
+    const maximum = String(data.get("max") || "");
+    const campaignId = String(data.get("from") || "");
+    if (search) query.q = search;
+    if (selectedNiche) query.niche = selectedNiche;
+    if (minimum) query.min = minimum;
+    if (maximum) query.max = maximum;
+    if (campaignId) query.from = campaignId;
+    const text = new URLSearchParams(query).toString();
+    const route = text ? `/creators?${text}` : "/creators";
+    window.history.pushState(null, "", href(route));
+    setParams(new URLSearchParams(text));
+    router.replace(route);
+  }
 
   return (
     <Workspace active="/creators">
@@ -36,7 +69,7 @@ export default async function CreatorsPage({ searchParams }) {
           {campaign.min_tiktok_followers > 0 ? ` with at least ${formatFollowers(campaign.min_tiktok_followers)} TikTok followers` : ""}.
         </p>
       ) : null}
-      <form className="filters" action="/creators" method="get">
+      <form className="filters" onSubmit={applyFilters}>
         {from ? <input type="hidden" name="from" value={from} /> : null}
         <label>
           Search
@@ -53,11 +86,11 @@ export default async function CreatorsPage({ searchParams }) {
         </label>
         <label>
           Min followers
-          <input name="min" type="number" min="0" step="1000" defaultValue={params.min || ""} placeholder="0" />
+          <input name="min" type="number" min="0" step="1000" defaultValue={params.get("min") || ""} placeholder="0" />
         </label>
         <label>
           Max followers
-          <input name="max" type="number" min="0" step="1000" defaultValue={params.max || ""} placeholder="Any" />
+          <input name="max" type="number" min="0" step="1000" defaultValue={params.get("max") || ""} placeholder="Any" />
         </label>
         <label>
           Sort
@@ -91,7 +124,7 @@ export default async function CreatorsPage({ searchParams }) {
               <tr key={creator.id}>
                 <td>
                   <span className="who">
-                    <a href={`/creators/${creator.id}`}><b>{creator.name}</b></a>
+                    <Link href={`/creators/${creator.id}`}><b>{creator.name}</b></Link>
                     <span className="handle">@{creator.handle} · {creator.location}</span>
                   </span>
                 </td>
@@ -108,4 +141,8 @@ export default async function CreatorsPage({ searchParams }) {
       )}
     </Workspace>
   );
+}
+
+export default function CreatorsPage() {
+  return <CreatorsBrowser />;
 }

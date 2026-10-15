@@ -1,5 +1,4 @@
 import { Manrope, Poppins } from "next/font/google";
-import { Shell } from "../components/Shell";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -20,16 +19,10 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export const dynamic = "force-dynamic";
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${manrope.variable} ${poppins.variable}`}>{children}</body>
     </html>
   );
-}
-
-export function Workspace({ active, children }) {
-  return <Shell active={active}>{children}</Shell>;
 }

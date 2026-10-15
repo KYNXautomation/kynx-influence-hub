@@ -1,6 +1,8 @@
+import Link from "next/link";
+
 export function Wordmark() {
   return (
-    <a className="brand" href="/" aria-label="Kynx Influence Hub">
+    <Link className="brand" href="/" aria-label="Kynx Influence Hub">
       <span className="brand-row">
         <span className="brand-name">KYN</span>
         <svg className="brand-x" viewBox="0 0 32 32" aria-hidden="true">
@@ -10,6 +12,6 @@ export function Wordmark() {
         </svg>
       </span>
       <span className="brand-sub">Influence Hub</span>
-    </a>
+    </Link>
   );
 }
