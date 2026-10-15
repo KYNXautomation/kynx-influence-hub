@@ -3,8 +3,10 @@ import { Wordmark } from "./Wordmark";
 
 const links = [
   ["/", "Overview"],
-  ["/creators", "Creators"],
   ["/campaigns", "Campaigns"],
+  ["/creators", "Creators"],
+  ["/reviews", "Reviews"],
+  ["/payments", "Payments"],
   ["/impact", "Impact"],
 ];
 

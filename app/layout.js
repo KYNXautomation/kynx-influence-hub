@@ -15,7 +15,7 @@ const poppins = Poppins({
 
 export const metadata = {
   title: "Kynx Influence Hub",
-  description: "Creator roster, campaign matching, and documented views for Kynx Influence Hub.",
+  description: "A clear view of creators, campaigns, reviews, payments, and documented views.",
   robots: { index: false, follow: false },
 };
 

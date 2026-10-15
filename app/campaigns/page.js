@@ -3,38 +3,35 @@
 import Link from "next/link";
 import { Workspace } from "../../components/Workspace";
 import { useLedger } from "../../lib/useLedger";
-import { formatFollowers, formatNumber } from "../../lib/format";
+import { formatNumber, formatPeso } from "../../lib/format";
 
 export default function CampaignsPage() {
   const { listCampaigns } = useLedger();
-  const campaigns = listCampaigns();
 
   return (
     <Workspace active="/campaigns">
       <header className="page-head">
         <p className="eyebrow">Work</p>
         <h1>Campaigns</h1>
-        <p className="lede">Each campaign asks for a niche. Use that to pull a shortlist, then document the views those posts generate.</p>
+        <p className="lede">Each campaign keeps one record per creator: agreement, deliverables, and the views those posts generate.</p>
       </header>
       <div className="campaign-list">
-        {campaigns.map((campaign) => (
+        {listCampaigns().map((campaign) => (
           <article key={campaign.id} className="campaign-row">
             <div>
               <h3><Link href={`/campaigns/${campaign.id}`}>{campaign.name}</Link></h3>
-              <p className="meta">{campaign.client_name}</p>
+              <p className="meta">{campaign.brand} · {campaign.owner}</p>
             </div>
             <div>
-              <span className="pill">{campaign.niche}</span>
-              <p className="meta">{formatFollowers(campaign.min_tiktok_followers)}+ TikTok · {campaign.status}</p>
+              {campaign.category ? <span className="pill">{campaign.category}</span> : <span className="pill">Open call</span>}
+              <p className="meta">{campaign.records.length} creator records · {campaign.ready} ready to pay</p>
             </div>
             <div>
               <b>{formatNumber(campaign.views)}</b>
-              <p className="meta">{campaign.post_count} documented posts</p>
+              <p className="meta">{formatPeso(campaign.budget)} sample budget</p>
             </div>
             <div className="actions">
-              <Link href={{ pathname: "/creators", query: { niche: campaign.niche, min: campaign.min_tiktok_followers, from: campaign.id } }}>
-                Find creators
-              </Link>
+              <Link href={`/campaigns/${campaign.id}`}>Open</Link>
             </div>
           </article>
         ))}

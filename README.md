@@ -2,7 +2,7 @@
 
 Internal desk for the creator roster. Campaigns ask for a niche and a TikTok follower floor. The roster can be filtered on those fields. Views from creator posts are stored against the client.
 
-Sample records ship with the app. They are fictional. View edits stay in the browser that made them.
+Sample records ship with the app. They are fictional. Agreement checks, notes, and view edits stay in the browser that made them.
 
 The published desk is https://kynxautomation.github.io/kynx-influence-hub/
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Workspace } from "../../components/Workspace";
 import { useLedger } from "../../lib/useLedger";
+import { categoryOptions } from "../../lib/model";
 import { href } from "../../lib/paths";
 import { formatFollowers, formatNumber, formatPeso } from "../../lib/format";
 
@@ -14,41 +15,34 @@ function numberParam(value, fallback) {
   return Number.isFinite(number) ? number : fallback;
 }
 
-function CreatorsBrowser() {
+export default function CreatorsPage() {
   const router = useRouter();
   const [params, setParams] = useState(new URLSearchParams());
 
   useEffect(() => {
     setParams(new URLSearchParams(window.location.search));
   }, []);
-  const { listCreators, listNiches, getCampaign } = useLedger();
+
+  const { listRecords, getCampaign } = useLedger();
   const niche = params.get("niche") || "";
+  const brand = params.get("brand") || "";
   const q = params.get("q") || "";
   const sort = params.get("sort") || "followers_desc";
   let min = numberParam(params.get("min"), 0);
   let max = numberParam(params.get("max"), 100_000_000);
   if (min > max) [min, max] = [max, min];
-  const from = numberParam(params.get("from"), 0);
+  const from = params.get("from") || "";
   const campaign = from ? getCampaign(from) : null;
-  const niches = listNiches();
-  const creators = listCreators({ niche, min, max, q, sort });
-  const minLabel = min > 0 ? `${formatFollowers(min)}+` : "any reach";
-  const nicheLabel = niche || "every niche";
+  const records = listRecords({ niche, min, max, q, brand, sort });
 
   function applyFilters(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const query = { sort: String(data.get("sort") || "followers_desc") };
-    const search = String(data.get("q") || "").trim();
-    const selectedNiche = String(data.get("niche") || "");
-    const minimum = String(data.get("min") || "");
-    const maximum = String(data.get("max") || "");
-    const campaignId = String(data.get("from") || "");
-    if (search) query.q = search;
-    if (selectedNiche) query.niche = selectedNiche;
-    if (minimum) query.min = minimum;
-    if (maximum) query.max = maximum;
-    if (campaignId) query.from = campaignId;
+    ["q", "niche", "brand", "min", "max", "from"].forEach((key) => {
+      const value = String(data.get(key) || "").trim();
+      if (value) query[key] = value;
+    });
     const text = new URLSearchParams(query).toString();
     const route = text ? `/creators?${text}` : "/creators";
     window.history.pushState(null, "", href(route));
@@ -61,27 +55,34 @@ function CreatorsBrowser() {
       <header className="page-head">
         <p className="eyebrow">Roster</p>
         <h1>Creators</h1>
-        <p className="lede">Search by name, then narrow to a niche and a TikTok follower range.</p>
+        <p className="lede">One row is one creator on one campaign. Filter by category, brand, and TikTok followers.</p>
       </header>
       {campaign ? (
         <p className="banner">
-          <strong>{campaign.name}</strong> for {campaign.client_name} needs {campaign.niche} creators
-          {campaign.min_tiktok_followers > 0 ? ` with at least ${formatFollowers(campaign.min_tiktok_followers)} TikTok followers` : ""}.
+          <strong>{campaign.name}</strong> for {campaign.brand}
+          {campaign.category ? ` looks for ${campaign.category} creators` : ""}
+          {campaign.minFollowers > 0 ? ` with at least ${formatFollowers(campaign.minFollowers)} TikTok followers` : ""}.
         </p>
       ) : null}
       <form className="filters" onSubmit={applyFilters}>
         {from ? <input type="hidden" name="from" value={from} /> : null}
         <label>
           Search
-          <input name="q" defaultValue={q} placeholder="Name or handle" />
+          <input name="q" defaultValue={q} placeholder="Name, handle, or campaign" />
         </label>
         <label>
-          Niche
+          Category
           <select name="niche" defaultValue={niche}>
-            <option value="">All niches</option>
-            {niches.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
+            <option value="">All categories</option>
+            {categoryOptions.map((item) => <option key={item} value={item}>{item}</option>)}
+          </select>
+        </label>
+        <label>
+          Brand
+          <select name="brand" defaultValue={brand}>
+            <option value="">All brands</option>
+            <option>Shopee</option>
+            <option>Demo brand</option>
           </select>
         </label>
         <label>
@@ -103,37 +104,35 @@ function CreatorsBrowser() {
         </label>
         <button className="apply" type="submit">Apply</button>
       </form>
-      <p className="result-line">
-        {creators.length} {creators.length === 1 ? "creator" : "creators"} · {nicheLabel} · {minLabel}
-      </p>
-      {creators.length === 0 ? (
-        <p className="empty">No creators match that niche and follower range.</p>
-      ) : (
+      <p className="result-line">{records.length} {records.length === 1 ? "record" : "records"}</p>
+      {records.length === 0 ? <p className="empty">No creators match that category and follower range.</p> : (
         <table>
           <thead>
             <tr>
               <th>Creator</th>
-              <th>Niche</th>
+              <th>Campaign</th>
+              <th>Category</th>
               <th className="num">TikTok followers</th>
-              <th className="num">Views generated</th>
+              <th>Status</th>
+              <th className="num">Views</th>
               <th className="num">Rate</th>
             </tr>
           </thead>
           <tbody>
-            {creators.map((creator) => (
-              <tr key={creator.id}>
+            {records.map((record) => (
+              <tr key={record.id}>
                 <td>
                   <span className="who">
-                    <Link href={`/creators/${creator.id}`}><b>{creator.name}</b></Link>
-                    <span className="handle">@{creator.handle} · {creator.location}</span>
+                    <Link href={`/creators/${record.id}`}><b>{record.creator.name}</b></Link>
+                    <span className="handle">@{record.creator.handle} · {record.creator.location}</span>
                   </span>
                 </td>
-                <td>{creator.niches}</td>
-                <td className="num" title={`${formatNumber(creator.tiktok_followers)} followers`}>
-                  {formatFollowers(creator.tiktok_followers)}
-                </td>
-                <td className="num">{formatNumber(creator.views_generated)}</td>
-                <td className="num">{formatPeso(creator.rate_php)}</td>
+                <td><Link href={`/campaigns/${record.campaign.id}`}>{record.campaign.name}</Link></td>
+                <td>{record.categoryLabel}</td>
+                <td className="num">{formatFollowers(record.creator.followers)}</td>
+                <td><span className="pill">{record.status}</span></td>
+                <td className="num">{formatNumber(record.views)}</td>
+                <td className="num">{formatPeso(record.rate)}</td>
               </tr>
             ))}
           </tbody>
@@ -141,8 +140,4 @@ function CreatorsBrowser() {
       )}
     </Workspace>
   );
-}
-
-export default function CreatorsPage() {
-  return <CreatorsBrowser />;
 }
