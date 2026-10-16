@@ -1,17 +1,22 @@
-import { Manrope, Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import { RoleProvider } from "../components/RoleProvider";
 import "./globals.css";
 
-const manrope = Manrope({
-  subsets: ["latin"],
+const manrope = localFont({
+  src: "../fonts/manrope-400.woff2",
   variable: "--font-body",
-  weight: ["400", "500", "600", "700"],
+  weight: "400 700",
+  display: "swap",
 });
 
-const poppins = Poppins({
-  subsets: ["latin"],
+const poppins = localFont({
+  src: [
+    { path: "../fonts/poppins-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/poppins-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/poppins-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-display",
-  weight: ["500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata = {
