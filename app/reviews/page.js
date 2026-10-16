@@ -10,45 +10,30 @@ import { canSeeRecord } from "../../lib/roles";
 
 export default function ReviewsPage() {
   const { role, creatorId, specialist } = useRole();
-  const { listReviews, listRecords, verifyDocument, setDeliverableState } = useLedger();
+  const { listReviews, listRecords, patchRecord } = useLedger();
   const [notice, setNotice] = useState("");
   const visible = new Set(listRecords().filter((record) => canSeeRecord(role, record, { creatorId, specialist })).map((record) => record.id));
-  const staffItems = listReviews().filter((item) => visible.has(item.recordId));
-  const brandItems = listRecords()
-    .filter((record) => canSeeRecord(role, record, { creatorId, specialist }))
-    .flatMap((record) => record.deliverables.filter((item) => item.state === "Approved").map((item) => ({
-      key: item.id,
-      recordId: record.id,
-      deliverableId: item.id,
-      label: item.title,
-      detail: record.creator.name,
-      campaign: record.campaign.name,
-    })));
-  const items = role === "brands" ? brandItems : staffItems;
+  const kinds = role === "brands" ? ["brand", "draft"] : role === "specialists" ? ["revision", "draft"] : ["kynx", "brand", "draft", "revision"];
+  const items = listReviews().filter((item) => visible.has(item.recordId) && kinds.includes(item.kind));
 
-  function act(item, next) {
-    if (item.kind === "deliverable" || item.deliverableId) {
-      setDeliverableState(item.recordId, item.deliverableId, next);
-      setNotice(next === "Published" ? "Approved for posting in this browser." : next === "Changes requested" ? "Changes requested in this browser." : "Sample draft approved in this browser.");
-      return;
-    }
-    verifyDocument(item.recordId, item.kind);
-    setNotice("Sample document verified in this browser.");
+  function act(item, fields, message) {
+    patchRecord(item.recordId, fields);
+    setNotice(message);
   }
 
   return (
     <Workspace>
       <header className="page-head">
-        <p className="eyebrow">{role === "brands" ? "Brand review" : "Review"}</p>
-        <h1>{role === "brands" ? "Drafts ready for the brand" : "Documents and drafts"}</h1>
+        <p className="eyebrow">{role === "brands" ? "Brand" : role === "admin" ? "Admin" : "Specialist"}</p>
+        <h1>{role === "brands" ? "Nominations and drafts" : role === "admin" ? "Approvals waiting on KYNX" : "Drafts on your creators"}</h1>
         <p className="lede">
           {role === "brands"
-            ? "These drafts already passed agency review. Approving one marks it ready to post. Actions stay in this browser."
-            : "MOA, billing statements, and deliverables waiting on a sample review. Actions stay in this browser."}
+            ? "Approve the person first. Approve the draft second. Both stay in this browser."
+            : "KYNX approval is the admin gate. Draft review follows once the row is on the tracker."}
         </p>
       </header>
       {notice ? <p className="notice">{notice}</p> : null}
-      {items.length === 0 ? <p className="empty">Nothing is waiting for review.</p> : (
+      {items.length === 0 ? <p className="empty">Nothing is waiting.</p> : (
         <div className="stack">
           {items.map((item) => (
             <article key={item.key} className="panel">
@@ -57,21 +42,26 @@ export default function ReviewsPage() {
                   <Avatar name={item.detail} />
                   <span>
                     <h3>{item.label}</h3>
-                    <p className="meta">{item.detail} · {item.campaign}</p>
+                    <p className="meta">{item.detail} · {item.campaign} · {item.owner}</p>
                   </span>
                 </div>
                 <div className="button-row">
                   <Link className="text-link" href={`/creators/${item.recordId}`}>Open record</Link>
-                  {role === "brands" ? (
+                  {item.kind === "kynx" && role === "admin" ? (
+                    <button className="apply" type="button" onClick={() => act(item, { kynxApproval: "Approved" }, "KYNX approved this nomination in this browser.")}>Approve for KYNX</button>
+                  ) : null}
+                  {item.kind === "brand" && (role === "brands" || role === "admin") ? (
+                    <button className="apply" type="button" onClick={() => act(item, { brandApproval: "Approved" }, "Brand approved this nomination in this browser.")}>Approve nomination</button>
+                  ) : null}
+                  {item.kind === "draft" && (role === "brands" || role === "admin") ? (
                     <>
-                      <button className="ghost" type="button" onClick={() => act(item, "Changes requested")}>Request changes</button>
-                      <button className="apply" type="button" onClick={() => act(item, "Published")}>Approve for posting</button>
+                      <button className="ghost" type="button" onClick={() => act(item, { draftStatus: "For revision" }, "Revision requested in this browser.")}>Request revision</button>
+                      <button className="apply" type="button" onClick={() => act(item, { draftStatus: "Approved" }, "Draft approved for posting in this browser.")}>Approve draft</button>
                     </>
-                  ) : (
-                    <button className="apply" type="button" onClick={() => act(item, "Approved")}>
-                      {item.kind === "deliverable" ? "Approve draft" : "Verify"}
-                    </button>
-                  )}
+                  ) : null}
+                  {item.kind === "revision" && (role === "specialists" || role === "admin") ? (
+                    <button className="apply" type="button" onClick={() => act(item, { draftStatus: "For review" }, "Revision sent back for review in this browser.")}>Send revision</button>
+                  ) : null}
                 </div>
               </div>
             </article>

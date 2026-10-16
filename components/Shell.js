@@ -9,7 +9,7 @@ import { useRole } from "./RoleProvider";
 import { creators } from "../lib/model";
 import { allows, navFor, roleById, roles } from "../lib/roles";
 
-const specialists = ["Annie", "Nisha", "Demo Specialist"];
+const specialists = ["Annie", "Nisha", "Daneca"];
 
 export function Shell({ children }) {
   const pathname = usePathname() || "/";

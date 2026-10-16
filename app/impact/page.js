@@ -15,7 +15,7 @@ export default function ImpactPage() {
       posts: client.posts.filter((post) => (role === "creators" ? post.handle === creator.handle : true)),
     }))
     .map((client) => ({ ...client, views: client.posts.reduce((sum, post) => sum + post.views, 0) }))
-    .filter((client) => role !== "brands" || client.name === "Shopee");
+    .filter((client) => role !== "brands" || client.brand === "Shopee");
   const total = clients.reduce((sum, client) => sum + client.views, 0);
 
   return (
@@ -23,11 +23,11 @@ export default function ImpactPage() {
       <header className="page-head">
         <p className="eyebrow">Clients</p>
         <h1>Generated views</h1>
-        <p className="lede">Published deliverables carry the view count. The brand total is the sum of those posts.</p>
+        <p className="lede">Published posts carry the view count. Each program total is the sum of those posts.</p>
       </header>
       <section className="stats" aria-label="Generated views">
         <div className="stat"><b>{formatNumber(total)}</b><span>Generated views</span></div>
-        <div className="stat"><b>{formatNumber(clients.length)}</b><span>Brands</span></div>
+        <div className="stat"><b>{formatNumber(clients.length)}</b><span>Programs</span></div>
         <div className="stat"><b>{formatNumber(clients.reduce((sum, client) => sum + client.posts.length, 0))}</b><span>Published posts</span></div>
       </section>
       <div className="client-list">

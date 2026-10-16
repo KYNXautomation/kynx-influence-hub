@@ -6,48 +6,83 @@ import { Avatar } from "../components/Avatar";
 import { useRole } from "../components/RoleProvider";
 import { useLedger } from "../lib/useLedger";
 import { canSeeRecord, roleById } from "../lib/roles";
-import { formatNumber, formatPeso } from "../lib/format";
+import { formatNumber, formatPeso, formatRate } from "../lib/format";
 
 export default function HomePage() {
   const { role, creatorId, specialist, creator } = useRole();
-  const { overviewStats, listCampaigns, listRecords } = useLedger();
+  const { overviewStats, listCampaigns, listRecords, attention } = useLedger();
   const stats = overviewStats();
   const scope = { creatorId, specialist };
   const campaigns = listCampaigns()
     .map((campaign) => ({ ...campaign, records: campaign.records.filter((record) => canSeeRecord(role, record, scope)) }))
-    .filter((campaign) => role === "admin" || role === "specialists" || campaign.records.length > 0 || (role === "brands" && campaign.brand === "Shopee"));
+    .filter((campaign) => role === "admin" || role === "finance" || campaign.records.length > 0 || (role === "brands" && campaign.brand === "Shopee"));
   const mine = listRecords().filter((record) => canSeeRecord(role, record, scope));
   const current = roleById(role);
+  const alerts = attention().filter((record) => canSeeRecord(role, record, scope));
 
   return (
     <Workspace>
       <header className="page-head">
         <p className="eyebrow">{role === "admin" ? "Operations" : current.label}</p>
         <h1>
-          {role === "creators" ? `${creator.name.split(" ")[0]}, your campaigns.` : role === "finance" ? "Clear the records. Then pay." : role === "brands" ? "Review the work. See the views." : "Match creators. Clear the work. Count the views."}
+          {role === "creators" ? `${creator.name.split(" ")[0]}, your campaigns.` : role === "finance" ? "Campaign money, then creator cost." : role === "brands" ? "Approve the nomination. Then the draft." : role === "specialists" ? "Your creators, from pitch to post." : "Pitch. Approve. Post. Count the views."}
         </h1>
         <p className="lede">{current.detail}</p>
       </header>
       <section className="stats" aria-label="Workspace summary">
         {role === "finance" ? (
           <>
+            <Link className="stat" href="/payments"><b>{formatPeso(stats.creatorCost)}</b><span>Creator cost on the tracker</span></Link>
             <Link className="stat" href="/payments"><b>{formatPeso(stats.readyAmount)}</b><span>{stats.ready} ready to pay</span></Link>
             <Link className="stat" href="/impact"><b>{formatNumber(stats.views)}</b><span>Generated views</span></Link>
           </>
         ) : role === "creators" ? (
           <>
-            <div className="stat"><b>{formatNumber(mine.length)}</b><span>Your campaigns</span></div>
+            <div className="stat"><b>{formatNumber(mine.length)}</b><span>Your nominations</span></div>
             <div className="stat"><b>{formatNumber(mine.reduce((sum, record) => sum + record.views, 0))}</b><span>Generated views</span></div>
           </>
         ) : (
           <>
-            <Link className="stat" href="/campaigns"><b>{formatNumber(role === "admin" ? stats.campaigns : campaigns.length)}</b><span>Campaigns</span></Link>
-            <Link className="stat" href={role === "brands" ? "/reviews" : "/creators"}><b>{formatNumber(role === "admin" ? stats.collaborations : mine.length)}</b><span>Creator records</span></Link>
-            {role === "admin" ? <Link className="stat" href="/payments"><b>{formatPeso(stats.readyAmount)}</b><span>{stats.ready} ready to pay</span></Link> : null}
-            <Link className="stat" href="/impact"><b>{formatNumber(role === "admin" ? stats.views : mine.reduce((sum, record) => sum + record.views, 0))}</b><span>Generated views</span></Link>
+            <Link className="stat" href="/campaigns"><b>{formatNumber(stats.live)}</b><span>Live campaign</span></Link>
+            <Link className="stat" href="/creators"><b>{formatNumber(mine.filter((record) => record.onTracker).length)}</b><span>On the tracker</span></Link>
+            <Link className="stat" href="/reviews"><b>{formatNumber(alerts.length)}</b><span>Follow up or escalate</span></Link>
+            <Link className="stat" href="/impact"><b>{formatNumber(mine.reduce((sum, record) => sum + record.views, 0))}</b><span>Generated views</span></Link>
           </>
         )}
       </section>
+      {role === "admin" || role === "specialists" ? (
+        <section className="panel" style={{ marginBottom: 14 }}>
+          <h2>How a row moves</h2>
+          <p className="meta">A creator reaches the live tracker only after all three. Dropped rows stay in place.</p>
+          <ol className="checks">
+            <li>Specialist pitches and the creator confirms.</li>
+            <li>Admin approves for KYNX. Until then the client sheet does not receive the row.</li>
+            <li>The brand approves. Rate, MOA, tax, and internal notes never go across.</li>
+            <li>Stage is then calculated: negotiating, draft, revision, approved for posting, posted.</li>
+          </ol>
+        </section>
+      ) : null}
+      {alerts.length > 0 && role !== "creators" && role !== "brands" ? (
+        <>
+          <div className="section-label"><h2>Needs a person today</h2></div>
+          <div className="stack" style={{ marginBottom: 18 }}>
+            {alerts.map((record) => (
+              <article key={record.id} className="campaign-row">
+                <div className="who">
+                  <Avatar name={record.creator.name} />
+                  <span>
+                    <h3><Link href={`/creators/${record.id}`}>{record.creator.name}</Link></h3>
+                    <p className="meta">@{record.creator.handle} · {record.program} · {record.owner}</p>
+                  </span>
+                </div>
+                <div><span className="pill">{record.stage}</span><p className="meta">{record.late} days late · {record.risk}</p></div>
+                <div><b>{record.action}</b><p className="meta">{formatRate(record.rate)}</p></div>
+                <div className="actions"><Link href={`/creators/${record.id}`}>Open</Link></div>
+              </article>
+            ))}
+          </div>
+        </>
+      ) : null}
       {role === "creators" ? (
         <div className="stack">
           {mine.map((record) => (
@@ -55,8 +90,8 @@ export default function HomePage() {
               <div className="who">
                 <Avatar name={record.creator.name} />
                 <span>
-                  <h3><Link href={`/creators/${record.id}`}>{record.campaign.name}</Link></h3>
-                  <p className="meta">@{record.creator.handle} · {record.owner}</p>
+                  <h3><Link href={`/creators/${record.id}`}>{record.program}</Link></h3>
+                  <p className="meta">{record.campaign.name} · {record.owner}</p>
                 </span>
               </div>
               <div><span className="pill">{record.status}</span></div>
@@ -74,22 +109,17 @@ export default function HomePage() {
             <article key={campaign.id} className="campaign-row">
               <div>
                 <h3>{campaign.name}</h3>
-                <p className="meta">{campaign.brand} · {campaign.description}</p>
+                <p className="meta">{campaign.client} · {campaign.objective} · {campaign.campaignStatus}</p>
               </div>
               <div>
-                <span className="pill">{campaign.category || "Open"}</span>
-                <p className="meta">{campaign.records.length} creators</p>
+                <span className="pill">{campaign.paymentStatus}</span>
+                <p className="meta">{campaign.confirmed} of {campaign.targetKols} on the tracker</p>
               </div>
               <div>
-                <b>{formatNumber(campaign.records.reduce((sum, record) => sum + record.views, 0))}</b>
+                <b>{formatNumber(campaign.views)}</b>
                 <p className="meta">Generated views</p>
               </div>
-              <div className="actions">
-                {role !== "finance" && role !== "brands" ? (
-                  <Link href={{ pathname: "/creators", query: { niche: campaign.category || undefined, min: campaign.minFollowers || undefined, from: campaign.id } }}>Find creators</Link>
-                ) : null}
-                <Link href={`/campaigns/${campaign.id}`}>Open</Link>
-              </div>
+              <div className="actions"><Link href={`/campaigns/${campaign.id}`}>Open</Link></div>
             </article>
           ))}
         </div>

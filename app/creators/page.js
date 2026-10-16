@@ -8,9 +8,9 @@ import { Avatar } from "../../components/Avatar";
 import { useRole } from "../../components/RoleProvider";
 import { useLedger } from "../../lib/useLedger";
 import { canSeeRecord } from "../../lib/roles";
-import { categoryOptions } from "../../lib/model";
+import { categoryOptions, programs } from "../../lib/model";
 import { href } from "../../lib/paths";
-import { formatFollowers, formatNumber, formatPeso } from "../../lib/format";
+import { formatFollowers, formatNumber, formatRate } from "../../lib/format";
 
 function numberParam(value, fallback) {
   if (value === undefined || value === null || value === "") return fallback;
@@ -29,7 +29,8 @@ export default function CreatorsPage() {
   const { role, creatorId, specialist } = useRole();
   const { listRecords, getCampaign } = useLedger();
   const niche = params.get("niche") || "";
-  const brand = params.get("brand") || "";
+  const program = params.get("program") || "";
+  const stage = params.get("stage") || "";
   const q = params.get("q") || "";
   const sort = params.get("sort") || "followers_desc";
   let min = numberParam(params.get("min"), 0);
@@ -37,13 +38,13 @@ export default function CreatorsPage() {
   if (min > max) [min, max] = [max, min];
   const from = params.get("from") || "";
   const campaign = from ? getCampaign(from) : null;
-  const records = listRecords({ niche, min, max, q, brand, sort }).filter((record) => canSeeRecord(role, record, { creatorId, specialist }));
+  const records = listRecords({ niche, min, max, q, program, stage, sort }).filter((record) => canSeeRecord(role, record, { creatorId, specialist }));
 
   function applyFilters(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const query = { sort: String(data.get("sort") || "followers_desc") };
-    ["q", "niche", "brand", "min", "max", "from"].forEach((key) => {
+    ["q", "niche", "program", "stage", "min", "max", "from"].forEach((key) => {
       const value = String(data.get(key) || "").trim();
       if (value) query[key] = value;
     });
@@ -59,13 +60,12 @@ export default function CreatorsPage() {
       <header className="page-head">
         <p className="eyebrow">Roster</p>
         <h1>Creators</h1>
-        <p className="lede">One row is one creator on one campaign. Filter by category, brand, and TikTok followers.</p>
+        <p className="lede">One row is one creator on one program. Tier follows TikTok followers. The stage appears after the creator confirms, KYNX approves, and the brand approves.</p>
       </header>
       {campaign ? (
         <p className="banner">
           <strong>{campaign.name}</strong> for {campaign.brand}
-          {campaign.category ? ` looks for ${campaign.category} creators` : ""}
-          {campaign.minFollowers > 0 ? ` with at least ${formatFollowers(campaign.minFollowers)} TikTok followers` : ""}.
+          {campaign.minFollowers > 0 ? ` looks for creators with at least ${formatFollowers(campaign.minFollowers)} TikTok followers` : ""}.
         </p>
       ) : null}
       <form className="filters" onSubmit={applyFilters}>
@@ -82,11 +82,17 @@ export default function CreatorsPage() {
           </select>
         </label>
         <label>
-          Brand
-          <select name="brand" defaultValue={brand}>
-            <option value="">All brands</option>
-            <option>Shopee</option>
-            <option>Demo brand</option>
+          Program
+          <select name="program" defaultValue={program}>
+            <option value="">All programs</option>
+            {programs.map((item) => <option key={item}>{item}</option>)}
+          </select>
+        </label>
+        <label>
+          Stage
+          <select name="stage" defaultValue={stage}>
+            <option value="">All stages</option>
+            {["Pitching", "Awaiting KYNX", "Awaiting brand", "Negotiating", "Pending draft", "Draft submitted", "Under revision", "Approved for posting", "Posted", "Dropped", "Rejected"].map((item) => <option key={item}>{item}</option>)}
           </select>
         </label>
         <label>
@@ -114,10 +120,10 @@ export default function CreatorsPage() {
           <thead>
             <tr>
               <th>Creator</th>
-              <th>Campaign</th>
-              <th>Category</th>
-              <th className="num">TikTok followers</th>
-              <th>Status</th>
+              <th>Program</th>
+              <th>Tier</th>
+              <th>PIC</th>
+              <th>Stage</th>
               <th className="num">Generated views</th>
               <th className="num">Rate</th>
             </tr>
@@ -134,12 +140,12 @@ export default function CreatorsPage() {
                     </span>
                   </span>
                 </td>
-                <td><Link href={`/campaigns/${record.campaign.id}`}>{record.campaign.name}</Link></td>
-                <td>{record.categoryLabel}</td>
-                <td className="num">{formatFollowers(record.creator.followers)}</td>
-                <td><span className="pill">{record.status}</span></td>
+                <td>{record.program}</td>
+                <td>{record.tier}<div className="handle">{formatFollowers(record.creator.followers)}</div></td>
+                <td>{record.owner}</td>
+                <td><span className="pill">{record.status}</span>{record.action && record.onTracker ? <div className="handle">{record.action}</div> : null}</td>
                 <td className="num">{formatNumber(record.views)}</td>
-                <td className="num">{formatPeso(record.rate)}</td>
+                <td className="num">{role === "brands" ? "—" : formatRate(record.rate)}</td>
               </tr>
             ))}
           </tbody>

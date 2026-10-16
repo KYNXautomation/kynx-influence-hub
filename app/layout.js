@@ -21,7 +21,7 @@ const poppins = localFont({
 
 export const metadata = {
   title: "Kynx Influence Hub",
-  description: "A clear view of creators, campaigns, reviews, payments, and generated views.",
+  description: "Pitch a creator, clear KYNX and brand approval, then track the draft, the post, and the views it generated.",
   robots: { index: false, follow: false },
 };
 

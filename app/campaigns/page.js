@@ -12,29 +12,29 @@ export default function CampaignsPage() {
   const { listCampaigns } = useLedger();
   const campaigns = listCampaigns()
     .map((campaign) => ({ ...campaign, records: campaign.records.filter((record) => canSeeRecord(role, record, { creatorId, specialist })) }))
-    .filter((campaign) => role === "admin" || campaign.records.length > 0 || (role === "specialists" && specialist === "all"));
+    .filter((campaign) => role === "admin" || role === "finance" || campaign.records.length > 0 || (role === "specialists" && specialist === "all"));
 
   return (
     <Workspace active="/campaigns">
       <header className="page-head">
         <p className="eyebrow">Work</p>
         <h1>Campaigns</h1>
-        <p className="lede">Each campaign keeps one record per creator: agreement, deliverables, and the views those posts generate.</p>
+        <p className="lede">One row per campaign. Programs live inside it. Creator cost counts only the rows that cleared the three gates. Amounts on this desk are samples.</p>
       </header>
       <div className="campaign-list">
         {campaigns.map((campaign) => (
           <article key={campaign.id} className="campaign-row">
             <div>
               <h3><Link href={`/campaigns/${campaign.id}`}>{campaign.name}</Link></h3>
-              <p className="meta">{campaign.brand} · {campaign.owner}</p>
+              <p className="meta">{campaign.client} · {campaign.objective} · {campaign.owner}</p>
             </div>
             <div>
-              {campaign.category ? <span className="pill">{campaign.category}</span> : <span className="pill">Open call</span>}
-              <p className="meta">{campaign.records.length} creator records · {campaign.ready} ready to pay</p>
+              <span className="pill">{campaign.campaignStatus}</span>
+              <p className="meta">{campaign.paymentStatus} · {campaign.confirmed} on the tracker · {campaign.posted} posted</p>
             </div>
             <div>
-              <b>{formatNumber(campaign.records.reduce((sum, record) => sum + record.views, 0))}</b>
-              <p className="meta">{formatPeso(campaign.budget)} sample budget</p>
+              <b>{formatPeso(campaign.gross)}</b>
+              <p className="meta">{Math.round(campaign.margin * 100)}% after creator cost, boosting, and VAT</p>
             </div>
             <div className="actions">
               <Link href={`/campaigns/${campaign.id}`}>Open</Link>
@@ -42,6 +42,7 @@ export default function CampaignsPage() {
           </article>
         ))}
       </div>
+      <p className="meta">Generated views across visible campaigns: {formatNumber(campaigns.reduce((sum, campaign) => sum + campaign.views, 0))}.</p>
     </Workspace>
   );
 }
