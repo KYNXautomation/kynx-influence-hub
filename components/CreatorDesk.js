@@ -3,8 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Workspace } from "./Workspace";
+import { Avatar } from "./Avatar";
+import { useRole } from "./RoleProvider";
 import { useLedger } from "../lib/useLedger";
 import { categoryOptions } from "../lib/model";
+import { canSeeRecord } from "../lib/roles";
 import { formatDate, formatFollowers, formatNumber, formatPeso } from "../lib/format";
 
 function tone(status) {
@@ -14,12 +17,15 @@ function tone(status) {
 }
 
 export function CreatorDesk({ id }) {
+  const { role, creatorId, specialist } = useRole();
   const { getRecord, verifyDocument, saveDeliverableViews, addNote, setCategories, markPaid, clearAccountHold } = useLedger();
   const record = getRecord(id);
+  const operations = role === "admin" || role === "specialists";
+  const finance = role === "admin" || role === "finance";
   const [notice, setNotice] = useState("");
   const [sampleDoc, setSampleDoc] = useState("");
 
-  if (!record) {
+  if (!record || !canSeeRecord(role, record, { creatorId, specialist })) {
     return (
       <Workspace active="/creators">
         <header className="page-head">
@@ -73,6 +79,7 @@ export function CreatorDesk({ id }) {
       <header className="page-head">
         <p className="eyebrow">{record.campaign.name}</p>
         <div className="title-row">
+          <Avatar name={record.creator.name} size="lg" />
           <h1>{record.creator.name}</h1>
           <span className={`status ${tone(record.status)}`}>{record.status}</span>
         </div>
@@ -98,7 +105,7 @@ export function CreatorDesk({ id }) {
               <div className="button-row">
                 <span className="pill">{record[field]}</span>
                 <button className="ghost" type="button" onClick={() => setSampleDoc(label)}>View</button>
-                {record[field] !== "Verified" ? (
+                {operations && record[field] !== "Verified" ? (
                   <button className="save" type="button" onClick={() => { verifyDocument(record.id, field); setNotice(`${label} verified in this browser.`); }}>Verify</button>
                 ) : null}
               </div>
@@ -117,17 +124,17 @@ export function CreatorDesk({ id }) {
                   {item.postedAt ? `Posted ${formatDate(item.postedAt)} · ID ${item.videoId}` : item.state}
                 </div>
               </div>
-              {item.state === "Published" ? (
+              {item.state === "Published" && operations ? (
                 <form className="inline-form" onSubmit={(event) => saveViews(event, item.id)}>
-                  <input aria-label={`Views for ${item.title}`} name="views" type="number" min="0" step="1" defaultValue={item.views} key={`${item.id}-${item.views}`} />
+                  <input aria-label={`Generated views for ${item.title}`} name="views" type="number" min="0" step="1" defaultValue={item.views} key={`${item.id}-${item.views}`} />
                   <button className="save" type="submit">Save</button>
                 </form>
-              ) : <span className="pill">{item.state}</span>}
+              ) : item.state === "Published" ? <b>{formatNumber(item.views)}</b> : <span className="pill">{item.state}</span>}
             </div>
           ))}
         </section>
       </div>
-      <div className="split">
+      {operations ? <div className="split">
         <section className="panel">
           <h2>Team notes</h2>
           <p className="meta">Context for this creator, in this campaign.</p>
@@ -163,18 +170,18 @@ export function CreatorDesk({ id }) {
           <p>{record.brands.join(" · ") || "No recorded collaborations yet."}</p>
           <p className="meta">Based on campaign history, including ongoing work. This is not a brand endorsement.</p>
         </section>
-      </div>
+      </div> : null}
       <section className="panel">
         <p className="pay-amount">{formatPeso(record.rate)}</p>
         <span className={`status ${tone(record.status)}`}>{record.status}</span>
         <ul className="checks">
           {checks.map(([done, label]) => <li key={label} className={done ? "done" : undefined}>{done ? "✓" : "○"} {label}</li>)}
         </ul>
-        <p className="meta">One creator, one campaign record. Documented views on published posts: {formatNumber(record.views)}.</p>
-        <div className="button-row" style={{ justifyContent: "flex-start", marginTop: 12 }}>
+        <p className="meta">One creator, one campaign record. Generated views on published posts: {formatNumber(record.views)}.</p>
+        {finance ? <div className="button-row" style={{ justifyContent: "flex-start", marginTop: 12 }}>
           {record.status === "Ready to pay" ? <button className="apply" type="button" onClick={() => { markPaid(record.id); setNotice("Marked paid in this browser."); }}>Mark paid</button> : null}
           {record.accountHold ? <button className="ghost" type="button" onClick={() => { clearAccountHold(record.id); setNotice("Payment hold cleared in this browser."); }}>Clear account hold</button> : null}
-        </div>
+        </div> : null}
       </section>
       {record.others.length > 0 ? (
         <section className="panel" style={{ marginTop: 14 }}>

@@ -2,23 +2,31 @@
 
 import Link from "next/link";
 import { Workspace } from "../../components/Workspace";
+import { useRole } from "../../components/RoleProvider";
 import { useLedger } from "../../lib/useLedger";
 import { formatDate, formatNumber } from "../../lib/format";
 
 export default function ImpactPage() {
+  const { role, creator } = useRole();
   const { listImpact } = useLedger();
-  const clients = listImpact();
+  const clients = listImpact()
+    .map((client) => ({
+      ...client,
+      posts: client.posts.filter((post) => (role === "creators" ? post.handle === creator.handle : true)),
+    }))
+    .map((client) => ({ ...client, views: client.posts.reduce((sum, post) => sum + post.views, 0) }))
+    .filter((client) => role !== "brands" || client.name === "Shopee");
   const total = clients.reduce((sum, client) => sum + client.views, 0);
 
   return (
     <Workspace active="/impact">
       <header className="page-head">
         <p className="eyebrow">Clients</p>
-        <h1>Views we generated</h1>
+        <h1>Generated views</h1>
         <p className="lede">Published deliverables carry the view count. The brand total is the sum of those posts.</p>
       </header>
-      <section className="stats" aria-label="All documented views">
-        <div className="stat"><b>{formatNumber(total)}</b><span>Views across brands</span></div>
+      <section className="stats" aria-label="Generated views">
+        <div className="stat"><b>{formatNumber(total)}</b><span>Generated views</span></div>
         <div className="stat"><b>{formatNumber(clients.length)}</b><span>Brands</span></div>
         <div className="stat"><b>{formatNumber(clients.reduce((sum, client) => sum + client.posts.length, 0))}</b><span>Published posts</span></div>
       </section>

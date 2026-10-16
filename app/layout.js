@@ -1,4 +1,5 @@
 import { Manrope, Poppins } from "next/font/google";
+import { RoleProvider } from "../components/RoleProvider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -15,14 +16,14 @@ const poppins = Poppins({
 
 export const metadata = {
   title: "Kynx Influence Hub",
-  description: "A clear view of creators, campaigns, reviews, payments, and documented views.",
+  description: "A clear view of creators, campaigns, reviews, payments, and generated views.",
   robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} ${poppins.variable}`}>{children}</body>
+      <body className={`${manrope.variable} ${poppins.variable}`}><RoleProvider>{children}</RoleProvider></body>
     </html>
   );
 }

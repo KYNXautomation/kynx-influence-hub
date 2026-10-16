@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Workspace } from "../../components/Workspace";
+import { Avatar } from "../../components/Avatar";
+import { useRole } from "../../components/RoleProvider";
 import { useLedger } from "../../lib/useLedger";
+import { canSeeRecord } from "../../lib/roles";
 import { categoryOptions } from "../../lib/model";
 import { href } from "../../lib/paths";
 import { formatFollowers, formatNumber, formatPeso } from "../../lib/format";
@@ -23,6 +26,7 @@ export default function CreatorsPage() {
     setParams(new URLSearchParams(window.location.search));
   }, []);
 
+  const { role, creatorId, specialist } = useRole();
   const { listRecords, getCampaign } = useLedger();
   const niche = params.get("niche") || "";
   const brand = params.get("brand") || "";
@@ -33,7 +37,7 @@ export default function CreatorsPage() {
   if (min > max) [min, max] = [max, min];
   const from = params.get("from") || "";
   const campaign = from ? getCampaign(from) : null;
-  const records = listRecords({ niche, min, max, q, brand, sort });
+  const records = listRecords({ niche, min, max, q, brand, sort }).filter((record) => canSeeRecord(role, record, { creatorId, specialist }));
 
   function applyFilters(event) {
     event.preventDefault();
@@ -114,7 +118,7 @@ export default function CreatorsPage() {
               <th>Category</th>
               <th className="num">TikTok followers</th>
               <th>Status</th>
-              <th className="num">Views</th>
+              <th className="num">Generated views</th>
               <th className="num">Rate</th>
             </tr>
           </thead>
@@ -123,8 +127,11 @@ export default function CreatorsPage() {
               <tr key={record.id}>
                 <td>
                   <span className="who">
-                    <Link href={`/creators/${record.id}`}><b>{record.creator.name}</b></Link>
-                    <span className="handle">@{record.creator.handle} · {record.creator.location}</span>
+                    <Avatar name={record.creator.name} />
+                    <span>
+                      <Link href={`/creators/${record.id}`}><b>{record.creator.name}</b></Link>
+                      <span className="handle">@{record.creator.handle} · {record.creator.location}</span>
+                    </span>
                   </span>
                 </td>
                 <td><Link href={`/campaigns/${record.campaign.id}`}>{record.campaign.name}</Link></td>

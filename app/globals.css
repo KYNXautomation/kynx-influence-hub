@@ -110,13 +110,40 @@ button { cursor: pointer; }
   background: linear-gradient(90deg, rgba(232, 90, 173, 0.28), rgba(26, 61, 120, 0.35));
 }
 
-.side-note {
+.role-box {
   margin-top: auto;
-  color: var(--faint);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  display: grid;
+  gap: 12px;
 }
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 0;
+}
+
+.profile-card strong, .profile-card small { display: block; }
+.profile-card small { color: var(--muted); font-size: 12px; }
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18), 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.avatar.lg { width: 72px; height: 72px; font-size: 24px; }
+
+.who { display: flex; align-items: center; gap: 12px; }
 
 .main { padding: 40px 48px 72px; max-width: 1180px; }
 
@@ -297,7 +324,7 @@ td {
   vertical-align: middle;
 }
 
-.who { display: grid; }
+.who > span { display: grid; }
 .who b { font-weight: 650; }
 .handle { color: var(--muted); font-size: 13px; }
 .num { font-variant-numeric: tabular-nums; text-align: right; }

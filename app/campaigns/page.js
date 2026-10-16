@@ -2,11 +2,17 @@
 
 import Link from "next/link";
 import { Workspace } from "../../components/Workspace";
+import { useRole } from "../../components/RoleProvider";
 import { useLedger } from "../../lib/useLedger";
+import { canSeeRecord } from "../../lib/roles";
 import { formatNumber, formatPeso } from "../../lib/format";
 
 export default function CampaignsPage() {
+  const { role, creatorId, specialist } = useRole();
   const { listCampaigns } = useLedger();
+  const campaigns = listCampaigns()
+    .map((campaign) => ({ ...campaign, records: campaign.records.filter((record) => canSeeRecord(role, record, { creatorId, specialist })) }))
+    .filter((campaign) => role === "admin" || campaign.records.length > 0 || (role === "specialists" && specialist === "all"));
 
   return (
     <Workspace active="/campaigns">
@@ -16,7 +22,7 @@ export default function CampaignsPage() {
         <p className="lede">Each campaign keeps one record per creator: agreement, deliverables, and the views those posts generate.</p>
       </header>
       <div className="campaign-list">
-        {listCampaigns().map((campaign) => (
+        {campaigns.map((campaign) => (
           <article key={campaign.id} className="campaign-row">
             <div>
               <h3><Link href={`/campaigns/${campaign.id}`}>{campaign.name}</Link></h3>
@@ -27,7 +33,7 @@ export default function CampaignsPage() {
               <p className="meta">{campaign.records.length} creator records · {campaign.ready} ready to pay</p>
             </div>
             <div>
-              <b>{formatNumber(campaign.views)}</b>
+              <b>{formatNumber(campaign.records.reduce((sum, record) => sum + record.views, 0))}</b>
               <p className="meta">{formatPeso(campaign.budget)} sample budget</p>
             </div>
             <div className="actions">

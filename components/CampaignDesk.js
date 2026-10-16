@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { Workspace } from "./Workspace";
+import { Avatar } from "./Avatar";
+import { useRole } from "./RoleProvider";
 import { useLedger } from "../lib/useLedger";
+import { canSeeRecord } from "../lib/roles";
 import { formatFollowers, formatNumber, formatPeso } from "../lib/format";
 
 export function CampaignDesk({ id }) {
+  const { role, creatorId, specialist } = useRole();
   const { getCampaign } = useLedger();
   const campaign = getCampaign(id);
+  const records = campaign ? campaign.records.filter((record) => canSeeRecord(role, record, { creatorId, specialist })) : [];
 
   if (!campaign) {
     return (
@@ -31,8 +36,8 @@ export function CampaignDesk({ id }) {
       <section className="stats" aria-label="Campaign summary">
         <div className="stat"><b>{campaign.owner}</b><span>Lead specialist</span></div>
         <div className="stat"><b>{formatPeso(campaign.budget)}</b><span>Sample budget</span></div>
-        <div className="stat"><b>{formatNumber(campaign.views)}</b><span>Documented views</span></div>
-        <div className="stat"><b>{campaign.records.length}</b><span>Creator records</span></div>
+        <div className="stat"><b>{formatNumber(records.reduce((sum, record) => sum + record.views, 0))}</b><span>Generated views</span></div>
+        <div className="stat"><b>{records.length}</b><span>Creator records</span></div>
       </section>
       <div className="section-label">
         <h2>Creator records</h2>
@@ -41,7 +46,7 @@ export function CampaignDesk({ id }) {
         </Link>
       </div>
       {campaign.applicationsOpen ? <p className="banner">Applications are open on this sample campaign. Records you already have stay in this browser.</p> : null}
-      {campaign.records.length === 0 ? <p className="empty">No creator records on this campaign yet.</p> : (
+      {records.length === 0 ? <p className="empty">No creator records on this campaign yet.</p> : (
         <table>
           <thead>
             <tr>
@@ -49,17 +54,20 @@ export function CampaignDesk({ id }) {
               <th>Specialist</th>
               <th>Status</th>
               <th className="num">Published</th>
-              <th className="num">Views</th>
+              <th className="num">Generated views</th>
               <th className="num">Rate</th>
             </tr>
           </thead>
           <tbody>
-            {campaign.records.map((record) => (
+            {records.map((record) => (
               <tr key={record.id}>
                 <td>
                   <span className="who">
-                    <Link href={`/creators/${record.id}`}><b>{record.creator.name}</b></Link>
-                    <span className="handle">@{record.creator.handle} · {formatFollowers(record.creator.followers)}</span>
+                    <Avatar name={record.creator.name} />
+                    <span>
+                      <Link href={`/creators/${record.id}`}><b>{record.creator.name}</b></Link>
+                      <span className="handle">@{record.creator.handle} · {formatFollowers(record.creator.followers)}</span>
+                    </span>
                   </span>
                 </td>
                 <td>{record.owner}</td>
