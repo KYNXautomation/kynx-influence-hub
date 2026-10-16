@@ -7,6 +7,7 @@ import { Avatar } from "../../components/Avatar";
 import { useRole } from "../../components/RoleProvider";
 import { useLedger } from "../../lib/useLedger";
 import { canSeeRecord } from "../../lib/roles";
+import { creatorPath } from "../../lib/paths";
 
 export default function ReviewsPage() {
   const { role, creatorId, specialist } = useRole();
@@ -46,7 +47,7 @@ export default function ReviewsPage() {
                   </span>
                 </div>
                 <div className="button-row">
-                  <Link className="text-link" href={`/creators/${item.recordId}`}>Open record</Link>
+                  <Link className="text-link" href={creatorPath(item.recordId)}>Open record</Link>
                   {item.kind === "kynx" && role === "admin" ? (
                     <button className="apply" type="button" onClick={() => act(item, { kynxApproval: "Approved" }, "KYNX approved this nomination in this browser.")}>Approve for KYNX</button>
                   ) : null}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Workspace } from "../../components/Workspace";
 import { useLedger } from "../../lib/useLedger";
 import { formatPeso, formatRate } from "../../lib/format";
+import { campaignPath, creatorPath } from "../../lib/paths";
 
 export default function PaymentsPage() {
   const { listCampaigns, listRecords, markPaid, setCampaignPayment } = useLedger();
@@ -50,7 +51,7 @@ export default function PaymentsPage() {
         <tbody>
           {campaigns.map((campaign) => (
             <tr key={campaign.id}>
-              <td><Link href={`/campaigns/${campaign.id}`}><b>{campaign.name}</b></Link></td>
+              <td><Link href={campaignPath(campaign.id)}><b>{campaign.name}</b></Link></td>
               <td>{campaign.client}</td>
               <td><span className="pill">{campaign.paymentStatus}</span></td>
               <td className="num">{formatPeso(campaign.revenue)}</td>
@@ -85,7 +86,7 @@ export default function PaymentsPage() {
           {creators.map((record) => (
             <tr key={record.id}>
               <td>
-                <Link href={`/creators/${record.id}`}><b>{record.creator.name}</b></Link>
+                <Link href={creatorPath(record.id)}><b>{record.creator.name}</b></Link>
                 <div className="handle">@{record.creator.handle}</div>
               </td>
               <td>{record.program}</td>

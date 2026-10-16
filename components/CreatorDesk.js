@@ -4,10 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { Workspace } from "./Workspace";
 import { Avatar } from "./Avatar";
+import { ProgressRail } from "./ProgressRail";
 import { useRole } from "./RoleProvider";
 import { useLedger } from "../lib/useLedger";
 import { categoryOptions } from "../lib/model";
 import { canSeeRecord } from "../lib/roles";
+import { progressMove } from "../lib/progress";
+import { creatorPath } from "../lib/paths";
 import { formatDate, formatFollowers, formatNumber, formatRate } from "../lib/format";
 
 function tone(status) {
@@ -19,11 +22,22 @@ function tone(status) {
 
 export function CreatorDesk({ id }) {
   const { role, creatorId, specialist } = useRole();
-  const { getRecord, patchRecord, saveDeliverableViews, addNote, setCategories, markPaid, clearAccountHold, markPosted } = useLedger();
+  const { ready, getRecord, patchRecord, saveDeliverableViews, addNote, setCategories, markPaid, clearAccountHold, markPosted } = useLedger();
   const record = getRecord(id);
   const operations = role === "admin" || role === "specialists";
   const finance = role === "admin" || role === "finance";
   const [notice, setNotice] = useState("");
+
+  if (!ready) {
+    return (
+      <Workspace active="/creators">
+        <header className="page-head">
+          <p className="eyebrow">Creator</p>
+          <h1>Opening the record.</h1>
+        </header>
+      </Workspace>
+    );
+  }
 
   if (!record || !canSeeRecord(role, record, { creatorId, specialist })) {
     return (
@@ -98,6 +112,29 @@ export function CreatorDesk({ id }) {
         <p className="lede">@{record.creator.handle} · {record.tier} · {formatFollowers(record.creator.followers)} TikTok followers · {record.categoryLabel}</p>
       </header>
       {notice ? <p className="notice">{notice}</p> : null}
+      <section className="panel" style={{ marginBottom: 14 }}>
+        <h2>Progress</h2>
+        <p className="meta">Pitch, confirmation, KYNX, brand, draft, and post are the shared steps. Slide only the steps your side owns. This copy stays in the browser.</p>
+        <ProgressRail
+          record={record}
+          onMove={(index) => {
+            const result = progressMove(record, index, role);
+            if (!result.ok) {
+              setNotice(result.message);
+              return;
+            }
+            if (result.post) {
+              markPosted(record.id);
+              setNotice("Marked posted in this browser.");
+              return;
+            }
+            if (result.patch) {
+              patchRecord(record.id, result.patch);
+              setNotice("Progress updated in this browser.");
+            }
+          }}
+        />
+      </section>
       <section className="fact-grid" aria-label="Nomination">
         <div className="fact"><span>PIC</span><b>{record.owner}</b></div>
         <div className="fact"><span>Platforms</span><b>{record.platforms}</b></div>
@@ -221,6 +258,35 @@ export function CreatorDesk({ id }) {
           </div>
         </section>
       </div> : null}
+      {operations || finance ? (
+        <section className="panel" style={{ marginTop: 14 }}>
+          <h2>Affiliate information</h2>
+          <p className="meta">Internal only. Legal name, contact, and payout details from the collection form never go on the client sheet.</p>
+          <form className="filters" onSubmit={(event) => {
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            patchRecord(record.id, {
+              affiliate: {
+                legalName: String(data.get("legalName") || "").slice(0, 120),
+                phone: String(data.get("phone") || "").slice(0, 40),
+                email: String(data.get("email") || "").slice(0, 120),
+                paymentMethod: String(data.get("paymentMethod") || "").slice(0, 40),
+                bankName: String(data.get("bankName") || "").slice(0, 80),
+                accountName: String(data.get("accountName") || "").slice(0, 120),
+              },
+            });
+            setNotice("Affiliate details saved in this browser. The brand side cannot see them.");
+          }}>
+            <label>Legal name<input name="legalName" defaultValue={record.affiliate?.legalName || ""} /></label>
+            <label>Phone<input name="phone" defaultValue={record.affiliate?.phone || ""} /></label>
+            <label>Email<input name="email" defaultValue={record.affiliate?.email || ""} /></label>
+            <label>Payment method<input name="paymentMethod" defaultValue={record.affiliate?.paymentMethod || ""} /></label>
+            <label>Bank<input name="bankName" defaultValue={record.affiliate?.bankName || ""} /></label>
+            <label>Account name<input name="accountName" defaultValue={record.affiliate?.accountName || ""} /></label>
+            <div className="button-row" style={{ alignItems: "end" }}><button className="apply" type="submit">Save internal details</button></div>
+          </form>
+        </section>
+      ) : null}
       {showMoney ? (
         <section className="panel">
           <p className="pay-amount">{formatRate(record.rate)}</p>
@@ -239,7 +305,7 @@ export function CreatorDesk({ id }) {
           <h2>Also on a program</h2>
           {record.others.map((other) => (
             <div className="doc" key={other.id}>
-              <Link href={`/creators/${other.id}`}>{other.program}</Link>
+              <Link href={creatorPath(other.id)}>{other.program}</Link>
               <span className="pill">{other.status}</span>
             </div>
           ))}

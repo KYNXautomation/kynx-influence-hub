@@ -231,6 +231,27 @@ h1 {
 
 .meta { margin: 0; color: var(--muted); font-size: 14px; }
 
+.rail { display: grid; gap: 8px; min-width: 180px; }
+.rail input[type="range"] { accent-color: #e85aad; padding: 0; }
+.rail-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--faint);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.rail-steps li.done { color: #ffd0ea; }
+.rail-compact { min-width: 140px; }
+.rail-now { color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.rail-now.note { display: block; color: #ffd0ea; font-size: 12px; letter-spacing: 0; line-height: 1.35; text-transform: none; white-space: normal; }
+.create-form { display: grid; gap: 12px; margin-bottom: 18px; }
+.create-form .filters { margin-bottom: 0; }
+
 .pill, .status {
   display: inline-flex;
   align-items: center;

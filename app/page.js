@@ -7,6 +7,7 @@ import { useRole } from "../components/RoleProvider";
 import { useLedger } from "../lib/useLedger";
 import { canSeeRecord, roleById } from "../lib/roles";
 import { formatNumber, formatPeso, formatRate } from "../lib/format";
+import { campaignPath, creatorPath } from "../lib/paths";
 
 export default function HomePage() {
   const { role, creatorId, specialist, creator } = useRole();
@@ -71,13 +72,13 @@ export default function HomePage() {
                 <div className="who">
                   <Avatar name={record.creator.name} />
                   <span>
-                    <h3><Link href={`/creators/${record.id}`}>{record.creator.name}</Link></h3>
+                    <h3><Link href={creatorPath(record.id)}>{record.creator.name}</Link></h3>
                     <p className="meta">@{record.creator.handle} · {record.program} · {record.owner}</p>
                   </span>
                 </div>
                 <div><span className="pill">{record.stage}</span><p className="meta">{record.late} days late · {record.risk}</p></div>
                 <div><b>{record.action}</b><p className="meta">{formatRate(record.rate)}</p></div>
-                <div className="actions"><Link href={`/creators/${record.id}`}>Open</Link></div>
+                <div className="actions"><Link href={creatorPath(record.id)}>Open</Link></div>
               </article>
             ))}
           </div>
@@ -90,7 +91,7 @@ export default function HomePage() {
               <div className="who">
                 <Avatar name={record.creator.name} />
                 <span>
-                  <h3><Link href={`/creators/${record.id}`}>{record.program}</Link></h3>
+                  <h3><Link href={creatorPath(record.id)}>{record.program}</Link></h3>
                   <p className="meta">{record.campaign.name} · {record.owner}</p>
                 </span>
               </div>
@@ -99,7 +100,7 @@ export default function HomePage() {
                 <b>{formatNumber(record.views)}</b>
                 <p className="meta">Generated views</p>
               </div>
-              <div className="actions"><Link href={`/creators/${record.id}`}>Open</Link></div>
+              <div className="actions"><Link href={creatorPath(record.id)}>Open</Link></div>
             </article>
           ))}
         </div>
@@ -119,7 +120,7 @@ export default function HomePage() {
                 <b>{formatNumber(campaign.views)}</b>
                 <p className="meta">Generated views</p>
               </div>
-              <div className="actions"><Link href={`/campaigns/${campaign.id}`}>Open</Link></div>
+              <div className="actions"><Link href={campaignPath(campaign.id)}>Open</Link></div>
             </article>
           ))}
         </div>

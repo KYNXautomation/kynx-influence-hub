@@ -5,6 +5,7 @@ import { Workspace } from "../../components/Workspace";
 import { useRole } from "../../components/RoleProvider";
 import { useLedger } from "../../lib/useLedger";
 import { formatDate, formatNumber } from "../../lib/format";
+import { campaignPath, creatorPath } from "../../lib/paths";
 
 export default function ImpactPage() {
   const { role, creator } = useRole();
@@ -54,8 +55,8 @@ export default function ImpactPage() {
                         <b>{post.title}</b>
                         <div className="handle">{post.postedAt ? formatDate(post.postedAt) : ""} · {post.videoId}</div>
                       </td>
-                      <td><Link href={`/campaigns/${post.campaignId}`}>{post.campaignName}</Link></td>
-                      <td><Link href={`/creators/${post.recordId}`}>@{post.handle}</Link></td>
+                      <td><Link href={campaignPath(post.campaignId)}>{post.campaignName}</Link></td>
+                      <td><Link href={creatorPath(post.recordId)}>@{post.handle}</Link></td>
                       <td className="num">{formatNumber(post.views)}</td>
                     </tr>
                   ))}
