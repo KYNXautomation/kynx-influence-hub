@@ -64,11 +64,13 @@ button { cursor: pointer; }
 .brand { display: flex; align-items: center; gap: 12px; }
 
 .brand-mark {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 0 0 2px rgba(232, 90, 173, 0.45), 0 0 28px rgba(88, 16, 72, 0.65);
+  object-position: center;
+  background: transparent;
+  box-shadow: 0 8px 22px rgba(40, 8, 32, 0.45);
 }
 
 .brand-name {
