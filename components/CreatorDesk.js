@@ -52,6 +52,7 @@ export function CreatorDesk({ id }) {
   }
 
   const showMoney = role !== "brands";
+  const showViews = role !== "admin";
   const checks = [
     [record.onTracker, "On the tracker"],
     [record.stage === "Posted", "Post is live"],
@@ -213,7 +214,7 @@ export function CreatorDesk({ id }) {
         </section>
       </div>
       <section className="panel" style={{ marginBottom: 14 }}>
-        <h2>Generated views</h2>
+        <h2>{showViews ? "Generated views" : "Posts"}</h2>
         <p className="meta">{record.publishedCount} of {record.deliverables.length} published · {record.campaign.name}</p>
         {record.deliverables.map((item, index) => (
           <div className="deliverable" key={item.id}>
@@ -221,12 +222,12 @@ export function CreatorDesk({ id }) {
               <b>{String(index + 1).padStart(2, "0")} · {item.title}</b>
               <div className="handle">{item.postedAt ? `Posted ${formatDate(item.postedAt)} · ID ${item.videoId}` : item.state}</div>
             </div>
-            {item.state === "Published" && operations ? (
+            {showViews && item.state === "Published" && operations ? (
               <form className="inline-form" onSubmit={(event) => saveViews(event, item.id)}>
                 <input aria-label={`Generated views for ${item.title}`} name="views" type="number" min="0" step="1" defaultValue={item.views} key={`${item.id}-${item.views}`} />
                 <button className="save" type="submit">Save</button>
               </form>
-            ) : item.state === "Published" ? <b>{formatNumber(item.views)}</b> : <span className="pill">{item.state}</span>}
+            ) : showViews && item.state === "Published" ? <b>{formatNumber(item.views)}</b> : <span className="pill">{item.state}</span>}
           </div>
         ))}
       </section>

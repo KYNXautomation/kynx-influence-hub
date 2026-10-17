@@ -135,7 +135,7 @@ export default function CreatorsPage() {
           <select name="sort" defaultValue={sort}>
             <option value="followers_desc">Followers, high to low</option>
             <option value="followers_asc">Followers, low to high</option>
-            <option value="views_desc">Views generated</option>
+            {role === "admin" ? null : <option value="views_desc">Views generated</option>}
             <option value="name">Name</option>
           </select>
         </label>
@@ -153,7 +153,7 @@ export default function CreatorsPage() {
               <th>PIC</th>
               <th>Progress</th>
               <th>Stage</th>
-              <th className="num">Generated views</th>
+              {role === "admin" ? null : <th className="num">Generated views</th>}
               <th className="num">Rate</th>
             </tr>
           </thead>
@@ -174,7 +174,7 @@ export default function CreatorsPage() {
                 <td>{record.owner}</td>
                 <td><ProgressRail record={record} compact message={railNote?.id === record.id ? railNote.message : ""} onMove={(index) => move(record, index)} /></td>
                 <td><span className="pill">{record.status}</span>{record.action && record.onTracker ? <div className="handle">{record.action}</div> : null}</td>
-                <td className="num">{formatNumber(record.views)}</td>
+                {role === "admin" ? null : <td className="num">{formatNumber(record.views)}</td>}
                 <td className="num">{role === "brands" ? "—" : formatRate(record.rate)}</td>
               </tr>
             ))}

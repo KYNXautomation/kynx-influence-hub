@@ -8,6 +8,7 @@ import { useLedger } from "../lib/useLedger";
 import { canSeeRecord, roleById } from "../lib/roles";
 import { formatNumber, formatPeso, formatRate } from "../lib/format";
 import { campaignPath, creatorPath } from "../lib/paths";
+import { GeneratedViews } from "../components/GeneratedViews";
 
 export default function HomePage() {
   const { role, creatorId, specialist, creator } = useRole();
@@ -21,12 +22,20 @@ export default function HomePage() {
   const current = roleById(role);
   const alerts = attention().filter((record) => canSeeRecord(role, record, scope));
 
+  if (role === "brands") {
+    return (
+      <Workspace active="/">
+        <GeneratedViews />
+      </Workspace>
+    );
+  }
+
   return (
     <Workspace>
       <header className="page-head">
         <p className="eyebrow">{role === "admin" ? "Operations" : current.label}</p>
         <h1>
-          {role === "creators" ? `${creator.name.split(" ")[0]}, your campaigns.` : role === "finance" ? "Campaign money, then creator cost." : role === "brands" ? "Approve the nomination. Then the draft." : role === "specialists" ? "Your creators, from pitch to post." : "Pitch. Approve. Post. Count the views."}
+          {role === "creators" ? `${creator.name.split(" ")[0]}, your campaigns.` : role === "finance" ? "Campaign money, then creator cost." : role === "specialists" ? "Your creators, from pitch to post." : "Pitch. Approve. Post."}
         </h1>
         <p className="lede">{current.detail}</p>
       </header>
@@ -47,7 +56,7 @@ export default function HomePage() {
             <Link className="stat" href="/campaigns"><b>{formatNumber(stats.live)}</b><span>Live campaign</span></Link>
             <Link className="stat" href="/creators"><b>{formatNumber(mine.filter((record) => record.onTracker).length)}</b><span>On the tracker</span></Link>
             <Link className="stat" href="/reviews"><b>{formatNumber(alerts.length)}</b><span>Follow up or escalate</span></Link>
-            <Link className="stat" href="/impact"><b>{formatNumber(mine.reduce((sum, record) => sum + record.views, 0))}</b><span>Generated views</span></Link>
+            {role === "specialists" ? <div className="stat"><b>{formatNumber(mine.reduce((sum, record) => sum + record.views, 0))}</b><span>Generated views</span></div> : null}
           </>
         )}
       </section>
@@ -117,8 +126,17 @@ export default function HomePage() {
                 <p className="meta">{campaign.confirmed} of {campaign.targetKols} on the tracker</p>
               </div>
               <div>
-                <b>{formatNumber(campaign.views)}</b>
-                <p className="meta">Generated views</p>
+                {role === "admin" ? (
+                  <>
+                    <b>{formatNumber(campaign.posted)}</b>
+                    <p className="meta">Posted</p>
+                  </>
+                ) : (
+                  <>
+                    <b>{formatNumber(campaign.views)}</b>
+                    <p className="meta">Generated views</p>
+                  </>
+                )}
               </div>
               <div className="actions"><Link href={campaignPath(campaign.id)}>Open</Link></div>
             </article>

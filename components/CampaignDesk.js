@@ -48,6 +48,7 @@ export function CampaignDesk({ id }) {
 
   const money = role === "admin" || role === "finance";
   const operations = role === "admin" || role === "specialists";
+  const showViews = role !== "admin";
 
   function move(record, index) {
     const result = progressMove(record, index, role);
@@ -90,7 +91,7 @@ export function CampaignDesk({ id }) {
       <section className="stats" aria-label="Campaign summary">
         <div className="stat"><b>{campaign.campaignStatus}</b><span>{formatDate(campaign.start)} – {formatDate(campaign.end)}</span></div>
         <div className="stat"><b>{campaign.confirmed}/{campaign.targetKols}</b><span>On the tracker</span></div>
-        <div className="stat"><b>{formatNumber(records.reduce((sum, record) => sum + record.views, 0))}</b><span>Generated views</span></div>
+        <div className="stat"><b>{showViews ? formatNumber(records.reduce((sum, record) => sum + record.views, 0)) : campaign.posted}</b><span>{showViews ? "Generated views" : "Posted"}</span></div>
         <div className="stat"><b>{campaign.paymentStatus}</b><span>Brand payment</span></div>
       </section>
       {money ? (
@@ -111,7 +112,7 @@ export function CampaignDesk({ id }) {
                 <th className="num">Nominations</th>
                 <th className="num">On tracker</th>
                 <th className="num">Posted</th>
-                <th className="num">Generated views</th>
+                {showViews ? <th className="num">Generated views</th> : null}
                 {money ? <th className="num">Creator cost</th> : null}
               </tr>
             </thead>
@@ -122,7 +123,7 @@ export function CampaignDesk({ id }) {
                   <td className="num">{row.nominations}</td>
                   <td className="num">{row.confirmed}</td>
                   <td className="num">{row.posted}</td>
-                  <td className="num">{formatNumber(row.views)}</td>
+                  {showViews ? <td className="num">{formatNumber(row.views)}</td> : null}
                   {money ? <td className="num">{formatPeso(row.creatorCost)}</td> : null}
                 </tr>
               ))}
@@ -144,7 +145,7 @@ export function CampaignDesk({ id }) {
                 <th>Progress</th>
                 <th>Stage</th>
                 <th>Action</th>
-              <th className="num">Generated views</th>
+              {showViews ? <th className="num">Generated views</th> : null}
               {money || role === "specialists" ? <th className="num">Rate</th> : null}
             </tr>
           </thead>
@@ -165,7 +166,7 @@ export function CampaignDesk({ id }) {
                 <td><ProgressRail record={record} compact message={railNote?.id === record.id ? railNote.message : ""} onMove={(index) => move(record, index)} /></td>
                 <td><span className="pill">{record.stage}</span></td>
                 <td>{record.action}{record.late ? ` · ${record.late}d` : ""}</td>
-                <td className="num">{formatNumber(record.views)}</td>
+                {showViews ? <td className="num">{formatNumber(record.views)}</td> : null}
                 {money || role === "specialists" ? <td className="num">{formatRate(record.rate)}</td> : null}
               </tr>
             ))}
