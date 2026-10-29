@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Workspace } from "./Workspace";
 import { Avatar } from "./Avatar";
 import { ProgressRail } from "./ProgressRail";
+import { SheetSync } from "./SheetSync";
 import { useRole } from "./RoleProvider";
 import { useLedger } from "../lib/useLedger";
 import { canSeeRecord } from "../lib/roles";
@@ -15,8 +16,9 @@ import { formatDate, formatFollowers, formatNumber, formatPeso, formatRate } fro
 
 export function CampaignDesk({ id }) {
   const { role, creatorId, specialist } = useRole();
-  const { ready, getCampaign, addNomination, patchRecord, markPosted } = useLedger();
+  const { ready, getCampaign, addNomination, patchRecord, markPosted, applySheet } = useLedger();
   const [notice, setNotice] = useState("");
+  const [changeTick, setChangeTick] = useState(0);
   const [railNote, setRailNote] = useState(null);
   const campaign = getCampaign(id);
   const records = campaign ? campaign.records.filter((record) => canSeeRecord(role, record, { creatorId, specialist })) : [];
@@ -59,6 +61,7 @@ export function CampaignDesk({ id }) {
     }
     if (!result.patch && !result.post) return;
     setRailNote(null);
+    setChangeTick((tick) => tick + 1);
     if (result.post) {
       markPosted(record.id);
       setNotice("Marked posted in this browser.");
@@ -76,6 +79,7 @@ export function CampaignDesk({ id }) {
     const owner = role === "specialists" && specialist !== "all" ? specialist : String(data.get("owner") || "Annie");
     if (!creator || !program) return;
     addNomination({ campaignId: campaign.id, creatorId: creator, program, owner });
+    setChangeTick((tick) => tick + 1);
     event.currentTarget.reset();
     setNotice("Nomination added in this browser. It starts at Pitching.");
   }
@@ -94,6 +98,7 @@ export function CampaignDesk({ id }) {
         <div className="stat"><b>{showViews ? formatNumber(records.reduce((sum, record) => sum + record.views, 0)) : campaign.posted}</b><span>{showViews ? "Generated views" : "Posted"}</span></div>
         <div className="stat"><b>{campaign.paymentStatus}</b><span>Brand payment</span></div>
       </section>
+      {operations ? <SheetSync campaign={campaign} applySheet={applySheet} changeTick={changeTick} /> : null}
       {money ? (
         <section className="fact-grid" aria-label="Campaign money">
           <div className="fact"><span>Brand payment</span><b>{formatPeso(campaign.revenue)}</b></div>
@@ -203,7 +208,7 @@ export function CampaignDesk({ id }) {
       {operations ? (
         <form className="panel create-form" onSubmit={nominate} style={{ marginTop: 18 }}>
           <h2>Nominate a creator</h2>
-          <p className="meta">The row starts as Pitching. These are the columns the client sheet shares. Affiliate details stay on the creator record. This public desk does not write the private sheet.</p>
+          <p className="meta">The row starts as Pitching. These are the columns the client sheet shares. Affiliate details stay on the creator record. With a Google Sheet connected, the row is sent there too.</p>
           <div className="filters">
             <label>
               Creator

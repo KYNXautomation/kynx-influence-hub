@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import { RoleProvider } from "../components/RoleProvider";
+import { ThemeProvider } from "../components/ThemeProvider";
 import "./globals.css";
 
 const manrope = localFont({
@@ -27,8 +28,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${manrope.variable} ${poppins.variable}`}><RoleProvider>{children}</RoleProvider></body>
+    <html lang="en" data-theme="dark" className={`${manrope.variable} ${poppins.variable}`}>
+      <body><ThemeProvider><RoleProvider>{children}</RoleProvider></ThemeProvider></body>
     </html>
   );
 }

@@ -1,10 +1,4 @@
-const fills = [
-  "linear-gradient(145deg, #f07ab8, #7a1d55)",
-  "linear-gradient(145deg, #8eb0ff, #1a3d78)",
-  "linear-gradient(145deg, #f0c14d, #8a5a10)",
-  "linear-gradient(145deg, #d7a4ff, #5b2a86)",
-  "linear-gradient(145deg, #ff8fbe, #3a1d6e)",
-];
+const fills = ["var(--accent)"];
 
 export function initials(name) {
   return String(name || "")
@@ -16,8 +10,11 @@ export function initials(name) {
     .toUpperCase();
 }
 
-export function Avatar({ name, size = "md" }) {
+export function Avatar({ name, size = "md", src = "" }) {
   const index = [...String(name)].reduce((sum, char) => sum + char.charCodeAt(0), 0) % fills.length;
+  if (src) {
+    return <img className={`avatar ${size}`} src={src} alt="" />;
+  }
   return (
     <span className={`avatar ${size}`} style={{ background: fills[index] }} aria-hidden="true">
       {initials(name)}

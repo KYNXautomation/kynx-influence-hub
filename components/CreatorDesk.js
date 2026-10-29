@@ -11,6 +11,7 @@ import { categoryOptions } from "../lib/model";
 import { canSeeRecord } from "../lib/roles";
 import { progressMove } from "../lib/progress";
 import { creatorPath } from "../lib/paths";
+import { shrinkPhoto } from "../lib/photo";
 import { formatDate, formatFollowers, formatNumber, formatRate } from "../lib/format";
 
 function tone(status) {
@@ -22,7 +23,7 @@ function tone(status) {
 
 export function CreatorDesk({ id }) {
   const { role, creatorId, specialist } = useRole();
-  const { ready, getRecord, patchRecord, saveDeliverableViews, addNote, setCategories, markPaid, clearAccountHold, markPosted } = useLedger();
+  const { ready, getRecord, patchRecord, saveDeliverableViews, addNote, setCategories, markPaid, clearAccountHold, markPosted, setPhoto } = useLedger();
   const record = getRecord(id);
   const operations = role === "admin" || role === "specialists";
   const finance = role === "admin" || role === "finance";
@@ -53,6 +54,20 @@ export function CreatorDesk({ id }) {
 
   const showMoney = role !== "brands";
   const showViews = role !== "admin";
+  const canEditRate = role === "admin" || role === "specialists" || role === "creators";
+  const canEditPhoto = role === "admin" || role === "specialists" || role === "creators";
+
+  async function choosePhoto(event) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    try {
+      const dataUrl = await shrinkPhoto(file);
+      setNotice(setPhoto(record.creator.id, dataUrl) ? "Photo saved in this browser." : "This browser is out of room for photos. Remove one, then try again.");
+    } catch (error) {
+      setNotice(error.message);
+    }
+  }
   const checks = [
     [record.onTracker, "On the tracker"],
     [record.stage === "Posted", "Post is live"],
@@ -106,11 +121,20 @@ export function CreatorDesk({ id }) {
       <header className="page-head">
         <p className="eyebrow">{record.program}</p>
         <div className="title-row">
-          <Avatar name={record.creator.name} size="lg" />
+          <Avatar name={record.creator.name} size="lg" src={record.creator.photo} />
           <h1>{record.creator.name}</h1>
           <span className={`status ${tone(record.status)}`}>{record.status}</span>
         </div>
         <p className="lede">@{record.creator.handle} · {record.tier} · {formatFollowers(record.creator.followers)} TikTok followers · {record.categoryLabel}</p>
+        {canEditPhoto ? (
+          <div className="photo-form">
+            <label className="ghost">
+              {record.creator.photo ? "Change photo" : "Add photo"}
+              <input type="file" accept="image/*" onChange={choosePhoto} hidden />
+            </label>
+            {record.creator.photo ? <button className="ghost" type="button" onClick={() => { setPhoto(record.creator.id, ""); setNotice("Photo removed in this browser."); }}>Remove photo</button> : null}
+          </div>
+        ) : null}
       </header>
       {notice ? <p className="notice">{notice}</p> : null}
       <section className="panel" style={{ marginBottom: 14 }}>
@@ -199,7 +223,7 @@ export function CreatorDesk({ id }) {
                 Rate
                 <input name="rate" type="number" min="0" step="1" defaultValue={record.rate || ""} key={record.rate} placeholder="Need rate" />
               </label>
-              {operations ? <button className="save" type="submit">Save rate</button> : null}
+              {canEditRate ? <button className="save" type="submit">Save rate</button> : null}
             </form>
           ) : <p className="meta">Rate, invoice, and MOA stay on the KYNX side of the row.</p>}
           {showMoney ? (

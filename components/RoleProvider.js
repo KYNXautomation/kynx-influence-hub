@@ -3,16 +3,19 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { creators } from "../lib/model";
 import { roleById } from "../lib/roles";
+import { talentManagers } from "../lib/talents";
 
 const RoleContext = createContext(null);
 const roleKey = "kynx-role";
 const creatorKey = "kynx-role-creator";
 const specialistKey = "kynx-role-specialist";
+const managerKey = "kynx-role-talent-manager";
 
 export function RoleProvider({ children }) {
   const [role, setRole] = useState("admin");
   const [creatorId, setCreatorId] = useState("c03");
   const [specialist, setSpecialist] = useState("all");
+  const [talentManager, setTalentManager] = useState(talentManagers[0]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -23,6 +26,8 @@ export function RoleProvider({ children }) {
       if (roleById(savedRole).id === savedRole) setRole(savedRole);
       if (creators.some((creator) => creator.id === savedCreator)) setCreatorId(savedCreator);
       if (savedSpecialist) setSpecialist(savedSpecialist);
+      const savedManager = localStorage.getItem(managerKey);
+      if (talentManagers.includes(savedManager)) setTalentManager(savedManager);
     } catch {
       /* keep the operations side */
     }
@@ -34,11 +39,12 @@ export function RoleProvider({ children }) {
     localStorage.setItem(roleKey, role);
     localStorage.setItem(creatorKey, creatorId);
     localStorage.setItem(specialistKey, specialist);
-  }, [ready, role, creatorId, specialist]);
+    localStorage.setItem(managerKey, talentManager);
+  }, [ready, role, creatorId, specialist, talentManager]);
 
   const creator = creators.find((item) => item.id === creatorId) || creators[2];
   return (
-    <RoleContext.Provider value={{ role, setRole, creatorId, setCreatorId, creator, specialist, setSpecialist }}>
+    <RoleContext.Provider value={{ role, setRole, creatorId, setCreatorId, creator, specialist, setSpecialist, talentManager, setTalentManager }}>
       {children}
     </RoleContext.Provider>
   );

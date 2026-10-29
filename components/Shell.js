@@ -8,17 +8,19 @@ import { Avatar } from "./Avatar";
 import { useRole } from "./RoleProvider";
 import { creators } from "../lib/model";
 import { allows, navFor, roleById, roles } from "../lib/roles";
+import { ThemeToggle } from "./ThemeToggle";
+import { talentManagers } from "../lib/talents";
 
 const specialists = ["Annie", "Nisha", "Daneca"];
 
 export function Shell({ children }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
-  const { role, setRole, creator, creatorId, setCreatorId, specialist, setSpecialist } = useRole();
+  const { role, setRole, creator, creatorId, setCreatorId, specialist, setSpecialist, talentManager, setTalentManager } = useRole();
   const current = roleById(role);
   const links = navFor(role);
   const allowed = allows(role, pathname);
-  const profileName = role === "creators" ? creator.name : role === "specialists" && specialist !== "all" ? specialist : current.label;
+  const profileName = role === "creators" ? creator.name : role === "specialists" && specialist !== "all" ? specialist : role === "talents" ? talentManager : current.label;
 
   useEffect(() => {
     if (!allowed) router.replace(current.home);
@@ -33,7 +35,8 @@ export function Shell({ children }) {
     <div className="shell">
       <aside className="side">
         <Wordmark />
-        <p className="tagline">Structured Influence. Scalable Impact.</p>
+        <ThemeToggle />
+        {role === "brands" ? <p className="tagline">Structured Influence. Scalable Impact.</p> : null}
         <nav className="nav" aria-label="Workspace">
           {links.map(([href, label]) => {
             const active = href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
@@ -55,7 +58,7 @@ export function Shell({ children }) {
             <label>
               Profile
               <select value={creatorId} onChange={(event) => setCreatorId(event.target.value)}>
-                {creators.map((item) => <option key={item.id} value={item.id}>@{item.handle}</option>)}
+                {creators.map((item) => <option key={item.id} value={item.id}>{item.handle ? `@${item.handle}` : item.name}</option>)}
               </select>
             </label>
           ) : null}
@@ -65,6 +68,14 @@ export function Shell({ children }) {
               <select value={specialist} onChange={(event) => setSpecialist(event.target.value)}>
                 <option value="all">All specialists</option>
                 {specialists.map((name) => <option key={name}>{name}</option>)}
+              </select>
+            </label>
+          ) : null}
+          {role === "talents" ? (
+            <label>
+              Manager
+              <select value={talentManager} onChange={(event) => setTalentManager(event.target.value)}>
+                {talentManagers.map((name) => <option key={name}>{name}</option>)}
               </select>
             </label>
           ) : null}
