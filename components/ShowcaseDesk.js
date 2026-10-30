@@ -114,7 +114,7 @@ function ArtistRow({ creator, index, total, niches, move, saveCredentials, remov
   }
 
   function remove() {
-    if (window.confirm(`Take ${creator.name} off the public artists page?`)) removeArtist(creator.id);
+    if (window.confirm(`Delete ${creator.name} from the public artists page? You can put them back later from the removed list.`)) removeArtist(creator.id);
   }
 
   return (
@@ -137,6 +137,7 @@ function ArtistRow({ creator, index, total, niches, move, saveCredentials, remov
           <button className="ghost" type="button" disabled={index === total - 1} onClick={() => move(creator.id, 1)}>Move down</button>
           <Link className="ghost" href={artistPath(creator)}>View</Link>
           <button className="save" type="button" aria-expanded={open} onClick={() => { setDraft(draftFrom(creator)); setNote(""); setOpen(!open); }}>{open ? "Close" : "Edit"}</button>
+          <button className="ghost talent-delete" type="button" onClick={remove} aria-label={`Delete ${creator.name}`}>Delete</button>
         </div>
       </div>
       {open ? (
