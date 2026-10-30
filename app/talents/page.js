@@ -133,7 +133,8 @@ export default function TalentsPage() {
   }
 
   function remove(talent) {
-    if (!window.confirm(`Remove ${talent.name} from the talent roster?`)) return;
+    const live = talent.ongoing?.length ? ` They are on ${talent.ongoing.length} ongoing campaign${talent.ongoing.length === 1 ? "" : "s"}; those stay on the tracker.` : "";
+    if (!window.confirm(`Delete ${talent.name} from the talent roster?${live}`)) return;
     removeTalent(talent.id);
     setEditingId("");
     setNotice(`${talent.name} removed from the roster.`);
@@ -231,6 +232,9 @@ export default function TalentsPage() {
                 </Link>
                 <button className="ghost" type="button" onClick={() => { setEditingId(editingId === talent.id ? "" : talent.id); setAdding(false); }}>
                   {editingId === talent.id ? "Close" : "Manage"}
+                </button>
+                <button className="ghost talent-delete" type="button" onClick={() => remove(talent)} aria-label={`Delete ${talent.name}`}>
+                  Delete
                 </button>
               </div>
 

@@ -657,7 +657,7 @@ th.num { text-align: right; }
 
 .talent-row {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 0.8fr 0.9fr auto auto;
+  grid-template-columns: 1.5fr 1fr 0.8fr 0.9fr auto auto auto;
   gap: 18px;
   align-items: center;
 }
@@ -1238,3 +1238,6 @@ a.ghost { display: inline-flex; align-items: center; text-decoration: none; }
   .talent-campaign { grid-template-columns: 1fr 1fr; }
   .talent-campaign > span:first-child { grid-column: 1 / -1; }
 }
+
+.talent-delete { color: #e5484d; border-color: rgba(229, 72, 77, 0.55); }
+.talent-delete:hover { background: rgba(229, 72, 77, 0.12); }
