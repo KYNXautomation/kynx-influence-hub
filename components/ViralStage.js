@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatNumber } from "../lib/format";
 import { useShowcase } from "../lib/useShowcase";
 import { artistPhoto } from "../lib/showcase";
+import { creators } from "../lib/model";
 
 const videoRoot = "https://video.squarespace-cdn.com/content/v1/69b03f3c09081c159fdb0d4a";
 const featuredIds = ["c31", "c30", "c33", "c29", "c28"];
@@ -52,7 +53,8 @@ function StageFilm({ src, poster }) {
 export function ViralStage() {
   const { list } = useShowcase();
   const slides = featuredIds
-    .map((id) => list.find((creator) => creator.id === id))
+    // Campaign works, not the exclusive line-up, so fall back to every creator.
+    .map((id) => list.find((creator) => creator.id === id) || creators.find((creator) => creator.id === id))
     .filter((creator) => creator && creator.videoId);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
