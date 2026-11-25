@@ -198,7 +198,7 @@ export default function TalentsPage() {
             <article className="panel talent-card" key={talent.id}>
               <div className="talent-row">
                 <span className="who">
-                  <Avatar name={talent.name} />
+                  <Avatar name={talent.name} src={talent.photo} />
                   <span>
                     <strong>{talent.name}</strong>
                     <span className="meta">

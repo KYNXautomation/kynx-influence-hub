@@ -77,7 +77,7 @@ export default function TalentCampaignsPage() {
       <header className="page-head">
         <p className="eyebrow">Talent campaigns</p>
         <div className="who" style={{ gap: 16 }}>
-          <Avatar name={talent.name} size="lg" />
+          <Avatar name={talent.name} size="lg" src={talent.photo} />
           <div>
             <h1>{talent.name}</h1>
             <p className="meta">
