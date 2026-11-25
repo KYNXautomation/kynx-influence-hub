@@ -52,7 +52,7 @@ export default function ReviewsPage() {
   return (
     <Workspace>
       <header className="page-head">
-        <p className="eyebrow">{role === "brands" ? "Brand" : role === "admin" ? "Admin" : "Specialist"}</p>
+        <p className="eyebrow">{role === "brands" ? "Brand" : role === "admin" ? "Admin" : "Specialist / PIC"}</p>
         <h1>Reviews</h1>
         <p className="lede">
           {role === "brands"

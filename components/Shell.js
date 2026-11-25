@@ -39,7 +39,9 @@ export function Shell({ children }) {
         {role === "brands" ? <p className="tagline">Structured Influence. Scalable Impact.</p> : null}
         <nav className="nav" aria-label="Workspace">
           {links.map(([href, label]) => {
-            const active = href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+            const matches = (path) => (path === "/" ? pathname === "/" : pathname === path || pathname.startsWith(`${path}/`));
+            // A longer link that also matches wins, so /payments is not lit on /payments/sheet.
+            const active = matches(href) && !links.some(([other]) => other.length > href.length && matches(other));
             return (
               <Link key={href} href={href} className={active ? "active" : undefined}>
                 {label}
@@ -64,7 +66,7 @@ export function Shell({ children }) {
           ) : null}
           {role === "specialists" ? (
             <label>
-              Specialist
+              Specialist / PIC
               <select value={specialist} onChange={(event) => setSpecialist(event.target.value)}>
                 <option value="all">All specialists</option>
                 {specialists.map((name) => <option key={name}>{name}</option>)}

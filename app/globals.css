@@ -817,7 +817,8 @@ th.num { text-align: right; }
 .artist-panel li { margin: 6px 0; }
 .artist-video { margin-top: 28px; max-width: 360px; }
 .artist-video .work-video { margin-bottom: 0; background: #111111; }
-.artist-connect { margin-top: 28px; }
+.artist-connect { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+.artist-connect h2 { flex-basis: 100%; }
 .artist-connect a {
   display: inline-flex;
   align-items: center;
@@ -1241,3 +1242,57 @@ a.ghost { display: inline-flex; align-items: center; text-decoration: none; }
 
 .talent-delete { color: #e5484d; border-color: rgba(229, 72, 77, 0.55); }
 .talent-delete:hover { background: rgba(229, 72, 77, 0.12); }
+
+/* Payment sheet: a Lark-style grid inside the workspace */
+.sheet-tabs { display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--line-strong); margin: 4px 0 16px; scrollbar-width: thin; }
+.sheet-tabs button { flex: none; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 10px 14px; font: inherit; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.sheet-tabs button:hover { color: var(--text); }
+.sheet-tabs button.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.sheet-tabs .sheet-tab-add { font-size: 18px; padding: 6px 12px; }
+
+.sheet-totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.sheet-totals > div { border: 1px solid var(--line-strong); border-radius: 12px; padding: 10px 14px; background: var(--panel); display: grid; gap: 2px; }
+.sheet-totals span { font-size: 12px; color: var(--muted); }
+.sheet-totals b { font-size: 20px; font-variant-numeric: tabular-nums; }
+.sheet-totals small { color: var(--faint); font-size: 12px; }
+.sheet-totals .urgent { border-color: rgba(255, 140, 0, 0.6); background: rgba(255, 140, 0, 0.1); }
+
+.sheet-tools { align-items: end; flex-wrap: wrap; }
+.sheet-paste textarea { width: 100%; font-family: ui-monospace, Consolas, monospace; font-size: 12px; margin: 8px 0; }
+
+.sheet-scroll { overflow: auto; max-height: 70vh; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--panel); }
+.sheet-grid { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; font-size: 13px; }
+.sheet-grid th, .sheet-grid td { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); border-top: 0; padding: 0; vertical-align: middle; }
+.sheet-grid th { position: sticky; top: 0; z-index: 2; padding: 10px 8px; text-transform: none; letter-spacing: 0; font-size: 13px; font-weight: 600; color: var(--text); text-align: center; background: color-mix(in srgb, #f2c94c 22%, var(--panel)); }
+.sheet-grid th.tone-name { background: color-mix(in srgb, #b39ddb 30%, var(--panel)); }
+.sheet-grid .sheet-index { position: sticky; left: 0; z-index: 1; width: 40px; min-width: 40px; text-align: center; color: var(--faint); background: var(--panel); font-size: 12px; }
+.sheet-grid th.sheet-index { z-index: 3; }
+.sheet-grid tbody tr:hover td { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.sheet-grid tbody tr:hover td.sheet-index { background: var(--panel); }
+.sheet-grid tr.urgent td.sheet-index { box-shadow: inset 3px 0 0 #ff8c00; }
+
+.sheet-input { width: 100%; min-width: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; padding: 9px 8px; outline: none; }
+.sheet-input:focus { box-shadow: inset 0 0 0 2px var(--accent); background: var(--bg, transparent); }
+.sheet-input.num { text-align: right; font-variant-numeric: tabular-nums; }
+select.sheet-input { cursor: pointer; }
+.pic-select { color: #d6336c; font-weight: 600; }
+
+.pay-status { margin: 5px 8px; width: calc(100% - 16px); padding: 4px 8px; border-radius: 999px; font-weight: 600; text-align: center; }
+.pay-paid { background: #9bd13b; color: #1d2a05; }
+.pay-urgent { background: #ff8c00; color: #fff; }
+.pay-pending { background: color-mix(in srgb, var(--muted) 22%, transparent); }
+.pay-processing { background: rgba(51, 112, 255, 0.2); color: #3370ff; }
+.pay-on-hold { background: rgba(229, 72, 77, 0.18); color: #e5484d; }
+.pay-status option { background: var(--panel); color: var(--text); }
+
+.sheet-link { display: flex; align-items: center; }
+.sheet-link a { padding: 0 8px; color: #3370ff; text-decoration: none; }
+.sheet-row-delete { border: 0; background: none; color: var(--faint); cursor: pointer; padding: 8px 12px; font-size: 13px; }
+.sheet-row-delete:hover { color: #e5484d; }
+.sheet-empty { padding: 18px 12px !important; color: var(--muted); }
+.sheet-actions { justify-content: flex-start; flex-wrap: wrap; margin: 0 0 14px; }
+.sheet-grid th.tone-calc { background: color-mix(in srgb, #6fcf97 25%, var(--panel)); }
+.sheet-calc { display: block; padding: 9px 8px; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.revenue-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.revenue-dashboard h3 { margin: 0 0 10px; }
+.revenue-dashboard tr.total td { font-weight: 700; }

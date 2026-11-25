@@ -10,7 +10,7 @@ import { roleById } from "../lib/roles";
 const managementSides = [
   ["admin", "Admin", "Approvals, the live tracker, and campaign money"],
   ["brands", "Brand", "Your campaigns, nominations, and generated views"],
-  ["specialists", "Specialist", "Your creators from the pitch through the post"],
+  ["specialists", "Specialist / PIC", "Your creators from the pitch through the post"],
   ["finance", "Finance", "Brand payments, creator costs, and VAT"],
 ];
 

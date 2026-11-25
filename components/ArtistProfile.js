@@ -79,10 +79,12 @@ export function ArtistProfile({ id }) {
             <WorkVideo src={video.src} poster={video.poster} />
           </section>
         ) : null}
-        {creator.instagram ? (
+        {creator.instagram || creator.facebook || creator.tiktok ? (
           <section className="artist-connect">
             <h2>Connect with {creator.name}</h2>
-            <a href={creator.instagram} target="_blank" rel="noreferrer">Instagram {creator.handle ? `@${creator.handle}` : ""}</a>
+            {creator.instagram ? <a href={creator.instagram} target="_blank" rel="noreferrer">Instagram {creator.handle ? `@${creator.handle}` : ""}</a> : null}
+            {creator.tiktok ? <a href={creator.tiktok} target="_blank" rel="noreferrer">TikTok @{creator.tiktok.split("@")[1]}</a> : null}
+            {creator.facebook ? <a href={creator.facebook} target="_blank" rel="noreferrer">Facebook</a> : null}
           </section>
         ) : null}
       </div>
