@@ -9,6 +9,7 @@ const links = [
   ["/for-creators", "For creators"],
   ["/for-brands", "For brands"],
   ["/artists", "Artists"],
+  ["/collaborations", "Collaborations"],
   ["/news", "News"],
   ["/contact", "Contact"],
 ];
