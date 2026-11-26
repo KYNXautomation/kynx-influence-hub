@@ -38,7 +38,8 @@ export function ChatBot() {
     log.current?.scrollTo({ top: log.current.scrollHeight });
   }, [messages, busy]);
 
-  if (!chatUrl) return null;
+  // Local preview shows the chat before n8n is connected; the live site waits for chatUrl.
+  if (!chatUrl && process.env.NODE_ENV !== "development") return null;
 
   async function send(event) {
     event.preventDefault();
@@ -46,6 +47,10 @@ export function ChatBot() {
     if (!text || busy) return;
     setDraft("");
     setMessages((list) => [...list, { from: "me", text }]);
+    if (!chatUrl) {
+      setMessages((list) => [...list, { from: "bot", text: "Not connected yet. Add the n8n Production URL to chatUrl in components/ChatBot.js." }]);
+      return;
+    }
     setBusy(true);
     try {
       const response = await fetch(chatUrl, {
