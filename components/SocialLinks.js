@@ -21,7 +21,14 @@ export function Icon({ name, size = 20 }) {
   );
 }
 
-export function SocialLinks({ creator, className = "social-links" }) {
+// The account name each link points to, e.g. "@pinkprincess720_".
+function account(creator, key) {
+  if (key === "instagram" && creator.handle) return `@${creator.handle}`;
+  const last = creator[key].replace(/[?#].*$/, "").replace(/\/$/, "").split("/").pop();
+  return last.startsWith("@") ? last : `@${last}`;
+}
+
+export function SocialLinks({ creator, className = "social-links", showAccount = false }) {
   const links = networks.filter(([key]) => creator[key]);
   if (!links.length) return null;
   return (
@@ -29,6 +36,7 @@ export function SocialLinks({ creator, className = "social-links" }) {
       {links.map(([key, label]) => (
         <a key={key} href={creator[key]} target="_blank" rel="noreferrer" aria-label={`${creator.name} on ${label}`}>
           <Icon name={key} />
+          {showAccount ? <span>{account(creator, key)}</span> : null}
         </a>
       ))}
     </div>

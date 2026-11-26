@@ -58,7 +58,7 @@ export function ArtistProfile({ id }) {
             <Link className="ed-cta" href="/contact" aria-label={`Work with ${creator.name}`}><Icon name="arrow" size={22} /></Link>
             {creator.bio ? <p className="ed-bio">{creator.bio}</p> : null}
           </div>
-          <SocialLinks creator={creator} className="social-links ed-social" />
+          <SocialLinks creator={creator} className="social-links ed-social" showAccount />
         </div>
       </div>
       {photo && !creator.photo && creator.photoCredit ? (

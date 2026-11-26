@@ -1507,3 +1507,22 @@ td { font-size: 14.5px; }
   .intro-band { padding: 40px 0 36px; }
   .step-grid { grid-template-columns: 1fr; }
 }
+
+/* Profile: name sits beside the photo, no overlap; accounts listed with their names. */
+.ed-row { gap: 56px; }
+.ed-info { left: 0; gap: 32px; }
+.ed-name { width: auto; padding: 0; background: none; }
+.ed-details, .ed-social { padding-left: 0; }
+.ed-social { flex-direction: column; align-items: flex-start; gap: 10px; }
+.ed-social a { display: inline-flex; align-items: center; gap: 10px; color: #1c1c1c; font-size: 15px; font-weight: 500; text-decoration: none; }
+.ed-social a span { border-bottom: 1px solid transparent; transition: border-color 0.2s var(--ease); }
+.ed-social a:hover span { border-bottom-color: currentColor; }
+@media (max-width: 760px) { .ed-row { gap: 0; } }
+
+/* Awards page. */
+.award { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 48px; align-items: center; padding: 40px 0; border-top: 1px solid var(--line); }
+.award-images { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.award-images img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 16px; box-shadow: 0 18px 40px rgba(20, 22, 26, 0.1); }
+.award-text h2 { margin: 0 0 8px; font-family: var(--display); font-size: clamp(30px, 3.4vw, 44px); letter-spacing: -0.03em; line-height: 1.05; }
+.award-body { margin: 18px 0 24px; max-width: 52ch; color: var(--muted); font-size: 16px; line-height: 1.7; }
+@media (max-width: 900px) { .award { grid-template-columns: 1fr; gap: 28px; } }

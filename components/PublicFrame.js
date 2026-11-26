@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
+  ["/awards", "Awards"],
   ["/how-it-works", "How it works"],
   ["/for-creators", "For creators"],
   ["/for-brands", "For brands"],
