@@ -6,7 +6,8 @@
         "public": true,
         "mode": "webhook",
         "options": {
-          "allowedOrigins": "https://kynxautomation.github.io,http://localhost:3000"
+          "allowedOrigins": "https://kynxautomation.github.io,http://localhost:3000",
+          "responseMode": "lastNode"
         }
       },
       "id": "a1f0c2d4-0001-4c3e-9a10-000000000001",
