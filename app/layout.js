@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import { RoleProvider } from "../components/RoleProvider";
 import { ThemeProvider } from "../components/ThemeProvider";
+import { ChatBot } from "../components/ChatBot";
 import "./globals.css";
 
 const manrope = localFont({
@@ -29,7 +30,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark" className={`${manrope.variable} ${poppins.variable}`}>
-      <body><ThemeProvider><RoleProvider>{children}</RoleProvider></ThemeProvider></body>
+      <body><ThemeProvider><RoleProvider>{children}<ChatBot /></RoleProvider></ThemeProvider></body>
     </html>
   );
 }

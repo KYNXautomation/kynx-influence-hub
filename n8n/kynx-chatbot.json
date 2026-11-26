@@ -1,0 +1,71 @@
+{
+  "name": "KYNX website chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {
+          "allowedOrigins": "https://kynxautomation.github.io,http://localhost:3000"
+        }
+      },
+      "id": "a1f0c2d4-0001-4c3e-9a10-000000000001",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "webhookId": "kynx-website-chat"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are the assistant on the KYNX Influence Hub website (https://kynxautomation.github.io/kynx-influence-hub/). KYNX is an influencer and talent agency: it matches brands with creators from nano to mega tier, runs campaigns end to end, and reports what each post delivered. It manages exclusive creators listed on the Artists page.\n\nPages you can point people to (paths under the site): /artists/ (the creator line-up), /collaborations/ (past brand work and case studies), /for-brands/, /for-creators/, /how-it-works/, /contact/.\n\nRules:\n- Be brief and friendly. Plain text, no markdown tables.\n- Never invent rates, prices, follower counts, results, contact details or availability. If you do not know, say so and send them to /contact/.\n- Never share personal data about creators (addresses, phone numbers, bank details, birthdays, earnings).\n- Brands asking about a campaign: ask for brand, goal, budget range and timeline, then send them to /contact/.\n- Creators wanting to join: send them to /for-creators/.\n- The page the visitor is on is in the message metadata as `page`; staff may also use this chat from the workspace."
+        }
+      },
+      "id": "a1f0c2d4-0002-4c3e-9a10-000000000002",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [260, 0]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-haiku-5-5",
+          "mode": "id"
+        },
+        "options": {
+          "maxTokensToSample": 600
+        }
+      },
+      "id": "a1f0c2d4-0003-4c3e-9a10-000000000003",
+      "name": "Anthropic Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [180, 220]
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "a1f0c2d4-0004-4c3e-9a10-000000000004",
+      "name": "Chat memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [360, 220]
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [[{ "node": "AI Agent", "type": "main", "index": 0 }]]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [[{ "node": "AI Agent", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "Chat memory": {
+      "ai_memory": [[{ "node": "AI Agent", "type": "ai_memory", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" }
+}
