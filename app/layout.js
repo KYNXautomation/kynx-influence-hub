@@ -29,7 +29,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="dark" className={`${manrope.variable} ${poppins.variable}`}>
+    <html lang="en" data-theme="light" className={`${manrope.variable} ${poppins.variable}`}>
       <body><ThemeProvider><RoleProvider>{children}<ChatBot /></RoleProvider></ThemeProvider></body>
     </html>
   );

@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { PublicFrame } from "../../components/PublicFrame";
 import { BrandArtists } from "../../components/BrandArtists";
+import { PublicFooter } from "../../components/PublicFooter";
 
 export default function ArtistsPage() {
   return (
@@ -14,11 +14,7 @@ export default function ArtistsPage() {
         </header>
         <BrandArtists />
       </section>
-      <footer className="public-foot">
-        <Link className="wordmark" href="/">KYN<span>X.</span></Link>
-        <p>KYNX Influence Hub · Creator campaigns, made clear</p>
-        <Link href="/workspace">Explore the management demo</Link>
-      </footer>
+      <PublicFooter />
     </PublicFrame>
   );
 }
