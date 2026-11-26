@@ -1296,3 +1296,113 @@ select.sheet-input { cursor: pointer; }
 .revenue-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
 .revenue-dashboard h3 { margin: 0 0 10px; }
 .revenue-dashboard tr.total td { font-weight: 700; }
+
+/* ===== Polish pass: same colours and layout, more finish ===== */
+:root, [data-theme="dark"] {
+  --radius: 18px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 6px 18px rgba(3, 8, 18, 0.28);
+  --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 16px 36px rgba(3, 8, 18, 0.42);
+  --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+[data-theme="light"] {
+  --shadow-1: 0 1px 2px rgba(23, 42, 66, 0.06), 0 6px 18px rgba(23, 42, 66, 0.06);
+  --shadow-2: 0 2px 6px rgba(23, 42, 66, 0.08), 0 18px 40px rgba(23, 42, 66, 0.12);
+}
+
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+::selection { background: color-mix(in srgb, var(--accent) 40%, transparent); }
+h1, h2, h3, .intro-band h2 { text-wrap: balance; }
+.lede, .meta, .artist-bio { text-wrap: pretty; }
+* { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--muted) 45%, transparent) transparent; }
+
+/* Surfaces */
+.stat, .fact, .panel, .campaign-row, .client-block, .intro-band, .gate-card, .sheet-totals > div {
+  box-shadow: var(--shadow-1);
+  transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.campaign-row:hover, .talent-card:hover, .choice:hover, .brand-pick:hover {
+  box-shadow: var(--shadow-2);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  transform: translateY(-1px);
+}
+.stat { position: relative; overflow: hidden; }
+.stat::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--accent); opacity: 0.85; }
+.stat b { font-variant-numeric: tabular-nums; }
+
+/* Buttons */
+.apply, .save, .ghost, .join, .theme-toggle, .artist-pages button, .choice {
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), transform 0.12s var(--ease), filter 0.2s var(--ease);
+}
+.apply, .save, .join { box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 28%, transparent); }
+.apply:hover, .save:hover, .join:hover { filter: brightness(1.06); box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 38%, transparent); }
+.ghost:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); border-color: var(--accent); }
+.apply:active, .save:active, .ghost:active, .join:active { transform: translateY(1px) scale(0.99); }
+.apply:disabled, .save:disabled, .ghost:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; filter: none; transform: none; }
+.theme-toggle:hover { border-color: var(--accent); }
+
+/* Fields */
+input, select, textarea { transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease); }
+input:hover, select:hover, textarea:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--ring); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+::placeholder { color: var(--faint); opacity: 1; }
+.sheet-input:focus { box-shadow: inset 0 0 0 2px var(--accent); }
+
+/* Navigation */
+.nav a { transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
+.nav a.active { box-shadow: 0 6px 16px color-mix(in srgb, var(--side-active) 30%, transparent); font-weight: 600; }
+.nav a:not(.active):hover { background: color-mix(in srgb, var(--side-active) 14%, transparent); color: var(--side-text); }
+
+/* Tables */
+th { border-bottom: 1px solid var(--line); }
+tbody tr { transition: background-color 0.15s var(--ease); }
+table:not(.roster):not(.sheet-grid) tbody tr:hover { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.pill, .status { font-weight: 600; letter-spacing: 0.05em; }
+
+/* Public header */
+.public-bar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+}
+.public-nav a, .public-actions > a:not(.join) { position: relative; transition: color 0.2s var(--ease); }
+.public-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.25s var(--ease); }
+.public-nav a:hover, .public-actions > a:not(.join):hover { color: var(--text); }
+.public-nav a:hover::after, .public-nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+/* Artist grid */
+.artist-card { transition: transform 0.3s var(--ease); }
+.artist-card img, .artist-card .artist-fallback { border-radius: 14px; transition: transform 0.5s var(--ease), box-shadow 0.3s var(--ease); }
+.artist-frame { display: block; width: 100%; overflow: hidden; border-radius: 14px; }
+.artist-frame > img { display: block; }
+.artist-card:hover img, .artist-card:hover .artist-fallback { transform: scale(1.035); box-shadow: 0 18px 40px rgba(17, 26, 41, 0.18); }
+.artist-card:hover .artist-name { color: #ef633d; }
+.artist-name { transition: color 0.2s var(--ease); }
+.artist-fallback {
+  background: linear-gradient(150deg, #1c2f47 0%, #172538 55%, #2a1f2a 100%);
+  color: #ff9978;
+  font-family: var(--display);
+  font-weight: 600;
+}
+.artist-filters button { transition: color 0.2s var(--ease), border-color 0.2s var(--ease); }
+.artist-filters button:hover { color: var(--text); }
+
+/* Artist profile */
+.artist-photo img, .artist-fallback.tall { border-radius: 20px; box-shadow: 0 24px 60px rgba(17, 26, 41, 0.18); }
+.artist-back { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); transition: transform 0.2s var(--ease); }
+.artist-back:hover { transform: translateX(-2px); }
+.artist-panel { box-shadow: 0 8px 24px rgba(17, 26, 41, 0.05); }
+.artist-connect a { transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease), transform 0.12s var(--ease); font-weight: 500; }
+.artist-connect a:hover { border-color: #ef633d; background: #fff4f0; }
+.artist-connect a:active { transform: translateY(1px); }
+
+/* Avatars */
+.avatar { transition: transform 0.2s var(--ease); }
+img.avatar { box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent), 0 8px 18px rgba(0, 0, 0, 0.28); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .artist-card:hover img, .artist-card:hover .artist-fallback, .campaign-row:hover, .talent-card:hover { transform: none; }
+}

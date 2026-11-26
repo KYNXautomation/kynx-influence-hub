@@ -19,9 +19,9 @@ function initials(name) {
 function ArtistFace({ creator }) {
   const photo = artistPhoto(creator);
   if (!photo) {
-    return <div className="artist-fallback" aria-hidden="true">{initials(creator.name)}</div>;
+    return <span className="artist-frame"><span className="artist-fallback" aria-hidden="true">{initials(creator.name)}</span></span>;
   }
-  return <img src={photo} alt="" style={creator.focus ? { objectPosition: creator.focus } : undefined} />;
+  return <span className="artist-frame"><img src={photo} alt="" style={creator.focus ? { objectPosition: creator.focus } : undefined} /></span>;
 }
 
 export function BrandArtists() {

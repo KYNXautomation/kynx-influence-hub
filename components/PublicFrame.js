@@ -1,21 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 
+const links = [
+  ["/how-it-works", "How it works"],
+  ["/for-creators", "For creators"],
+  ["/for-brands", "For brands"],
+  ["/artists", "Artists"],
+  ["/news", "News"],
+  ["/contact", "Contact"],
+];
+
 export function PublicFrame({ children, gate = false }) {
+  const pathname = (usePathname() || "").replace(/\/$/, "");
   return (
     <div className={gate ? "public gate" : "public"}>
       <header className="public-bar">
         <Link className="wordmark" href="/" aria-label="Kynx home">KYN<span>X.</span></Link>
         {gate ? null : (
           <nav className="public-nav" aria-label="Main">
-            <Link href="/how-it-works">How it works</Link>
-            <Link href="/for-creators">For creators</Link>
-            <Link href="/for-brands">For brands</Link>
-            <Link href="/artists">Artists</Link>
-            <Link href="/news">News</Link>
-            <Link href="/contact">Contact</Link>
+            {links.map(([href, label]) => (
+              <Link key={href} href={href} aria-current={pathname === href || pathname.startsWith(`${href}/`) ? "page" : undefined}>{label}</Link>
+            ))}
           </nav>
         )}
         <div className="public-actions">
