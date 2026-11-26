@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 // The n8n Chat Trigger production URL (n8n/kynx-chatbot.json). Empty hides the chat.
-export const chatUrl = "";
+export const chatUrl = "https://kynx.app.n8n.cloud/webhook/c7116de1-b42a-4a5f-bc30-d6f90a96b93d/chat";
 
 const greeting = { from: "bot", text: "Hi! Ask me about KYNX artists, campaigns or working with us." };
 
