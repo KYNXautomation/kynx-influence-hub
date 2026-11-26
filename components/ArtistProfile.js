@@ -6,6 +6,7 @@ import { artistPhoto } from "../lib/showcase";
 import { useShowcase } from "../lib/useShowcase";
 import { WorkVideo } from "./WorkVideo";
 import { Icon, SocialLinks } from "./SocialLinks";
+import { PostEmbed } from "./PostEmbed";
 
 const videoRoot = "https://video.squarespace-cdn.com/content/v1/69b03f3c09081c159fdb0d4a";
 
@@ -67,6 +68,15 @@ export function ArtistProfile({ id }) {
         </p>
       ) : null}
       <div className="ed-more">
+        {/* creator.topPosts in lib/model.js: up to 3 Instagram or TikTok links of product posts. */}
+        {creator.topPosts?.length ? (
+          <section className="top-posts" aria-label="Top product posts">
+            <h2>Top product posts</h2>
+            <div className="top-posts-grid">
+              {creator.topPosts.slice(0, 3).map((url, index) => <PostEmbed key={url} url={url} title={`${creator.name}, product post ${index + 1}`} />)}
+            </div>
+          </section>
+        ) : null}
         {creator.brand || points.length ? (
           <section className="artist-panel" aria-label="Work">
             {creator.brand ? (
