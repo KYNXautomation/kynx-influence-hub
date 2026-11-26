@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { artistPath, artistPhoto } from "../lib/showcase";
 import { useShowcase } from "../lib/useShowcase";
+import { SocialLinks } from "./SocialLinks";
 
 const pageSize = 8;
 function initials(name) {
@@ -45,16 +46,21 @@ export function BrandArtists() {
           ))}
         </div>
       </div>
-      <div className="artist-grid">
+      <ul className="team-grid">
         {visible.map((creator) => (
-          <Link key={creator.id} className="artist-card" href={artistPath(creator)}>
+          <li key={creator.id} className="team-card">
             <ArtistFace creator={creator} />
-            <span className="artist-label">
-              <span className="artist-name">{creator.name}</span>
-            </span>
-          </Link>
+            <div className="team-body">
+              {/* The name link stretches over the whole card; the social icons sit above it. */}
+              <h3><Link className="team-link" href={artistPath(creator)}>{creator.name}</Link></h3>
+              <hr />
+              <p className="team-role">{[creator.niche, creator.location].filter(Boolean).join(" · ")}</p>
+              {creator.bio ? <p className="team-desc">{creator.bio}</p> : null}
+              <SocialLinks creator={creator} />
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
       <nav className="artist-pages" aria-label="Pagination">
         <button type="button" disabled={current === 1} onClick={() => setPage(current - 1)}>Previous</button>
         {Array.from({ length: pages }, (_, index) => (

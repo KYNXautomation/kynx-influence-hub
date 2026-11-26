@@ -542,7 +542,6 @@ th.num { text-align: right; }
   .main { padding: 28px 20px 56px; }
   h1 { font-size: 34px; }
   .stats, .fact-grid, .filters, .campaign-row, .split, .brand-grid, .artist-grid { grid-template-columns: 1fr; }
-  .artist-grid { grid-template-columns: repeat(2, 1fr); }
   .actions, .inline-form { justify-content: flex-start; }
   table:not(.roster) { display: block; overflow-x: auto; }
 }
@@ -707,8 +706,6 @@ th.num { text-align: right; }
 .artist-filters button.active { color: var(--text); border-bottom-color: var(--text); }
 .artist-extra { display: flex; flex-wrap: wrap; gap: 10px 22px; }
 .artist-extra button, .artist-extra a { background: none; border: 0; padding: 6px 2px; color: #6f6f6f; letter-spacing: 0.02em; word-spacing: 0.12em; }
-.artist-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px 22px; }
-.artist-card { display: grid; justify-items: center; gap: 16px; text-align: center; color: #8a8a8a; }
 .artist-card img,
 .artist-fallback {
   width: 100%;
@@ -724,9 +721,6 @@ th.num { text-align: right; }
   font-size: 42px;
   letter-spacing: 0.04em;
 }
-.artist-label { display: grid; justify-items: center; gap: 6px; }
-.artist-name { font-size: 18px; font-weight: 400; color: #2a2a2a; letter-spacing: 0.01em; word-spacing: 0.08em; line-height: 1.35; }
-.artist-niche { font-size: 13px; letter-spacing: 0.08em; word-spacing: 0.14em; text-transform: uppercase; color: #8a8a8a; }
 .artist-pages { display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
 .artist-pages button {
   min-width: 36px;
@@ -749,22 +743,6 @@ th.num { text-align: right; }
   padding: 28px 56px 72px;
   min-height: calc(100vh - 88px);
 }
-.artist-photo { position: relative; }
-.artist-back {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 1;
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #111111;
-  border: 1px solid #e4e4e4;
-  text-decoration: none;
-}
 .artist-photo img,
 .artist-fallback.tall {
   width: 100%;
@@ -776,24 +754,6 @@ th.num { text-align: right; }
   background: #f3f3f3;
 }
 .artist-fallback.tall { aspect-ratio: auto; font-size: 72px; }
-.artist-detail h1 {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 8px 0 0;
-  font-family: var(--font-display), sans-serif;
-  font-size: 48px;
-  line-height: 1.1;
-  color: #111111;
-}
-.artist-detail h1 i {
-  width: 18px;
-  height: 18px;
-  background: #ef633d;
-  display: inline-block;
-  flex: none;
-}
-.artist-tags { margin: 14px 0 0; color: #8a8a8a; font-size: 14px; }
 .artist-bio { max-width: 62ch; margin: 18px 0 0; line-height: 1.6; color: #333333; }
 .artist-panel {
   display: grid;
@@ -817,18 +777,6 @@ th.num { text-align: right; }
 .artist-panel li { margin: 6px 0; }
 .artist-video { margin-top: 28px; max-width: 360px; }
 .artist-video .work-video { margin-bottom: 0; background: #111111; }
-.artist-connect { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
-.artist-connect h2 { flex-basis: 100%; }
-.artist-connect a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 52px;
-  padding: 0 18px;
-  border: 1px solid #ececec;
-  border-radius: 14px;
-  color: #111111;
-  text-decoration: none;
-}
 
 .roster-row {
   display: grid;
@@ -1001,7 +949,6 @@ a.ghost { display: inline-flex; align-items: center; text-decoration: none; }
   .hero, .step-grid, .intro-band { grid-template-columns: 1fr; }
   .intro-band { padding: 28px 20px; gap: 24px; }
   .public-bar { flex-wrap: wrap; }
-  .artist-grid { grid-template-columns: repeat(2, 1fr); }
   .brand-top { grid-template-columns: 1fr; padding: 20px; }
   .home-artists { padding: 20px; }
   .viral-row { grid-template-columns: 1fr; height: 72vh; padding: 0 12px; }
@@ -1010,7 +957,6 @@ a.ghost { display: inline-flex; align-items: center; text-decoration: none; }
   .artist-filter-row { align-items: flex-start; }
   .artist-profile { grid-template-columns: 1fr; padding: 20px; gap: 24px; }
   .artist-photo img, .artist-fallback.tall { height: auto; max-height: 70vh; }
-  .artist-detail h1 { font-size: 36px; }
   .artist-panel { grid-template-columns: 1fr; }
 }
 
@@ -1373,13 +1319,8 @@ table:not(.roster):not(.sheet-grid) tbody tr:hover { background: color-mix(in sr
 .public-nav a:hover::after, .public-nav a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* Artist grid */
-.artist-card { transition: transform 0.3s var(--ease); }
-.artist-card img, .artist-card .artist-fallback { border-radius: 14px; transition: transform 0.5s var(--ease), box-shadow 0.3s var(--ease); }
 .artist-frame { display: block; width: 100%; overflow: hidden; border-radius: 14px; }
 .artist-frame > img { display: block; }
-.artist-card:hover img, .artist-card:hover .artist-fallback { transform: scale(1.035); box-shadow: 0 18px 40px rgba(17, 26, 41, 0.18); }
-.artist-card:hover .artist-name { color: #ef633d; }
-.artist-name { transition: color 0.2s var(--ease); }
 .artist-fallback {
   background: linear-gradient(150deg, #1c2f47 0%, #172538 55%, #2a1f2a 100%);
   color: #ff9978;
@@ -1391,12 +1332,7 @@ table:not(.roster):not(.sheet-grid) tbody tr:hover { background: color-mix(in sr
 
 /* Artist profile */
 .artist-photo img, .artist-fallback.tall { border-radius: 20px; box-shadow: 0 24px 60px rgba(17, 26, 41, 0.18); }
-.artist-back { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); transition: transform 0.2s var(--ease); }
-.artist-back:hover { transform: translateX(-2px); }
 .artist-panel { box-shadow: 0 8px 24px rgba(17, 26, 41, 0.05); }
-.artist-connect a { transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease), transform 0.12s var(--ease); font-weight: 500; }
-.artist-connect a:hover { border-color: #ef633d; background: #fff4f0; }
-.artist-connect a:active { transform: translateY(1px); }
 
 /* Avatars */
 .avatar { transition: transform 0.2s var(--ease); }
@@ -1464,3 +1400,70 @@ img.avatar { box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px color-mix(in srgb, va
 .talent-campaign.due-near .due-label { color: var(--accent); font-weight: 600; }
 .talent-campaign.due-over { border-width: 2px; background: color-mix(in srgb, var(--accent) 10%, var(--panel)); }
 .sheet-tabs .count-badge { margin-left: 6px; }
+
+/* Artists grid: team cards (components/BrandArtists.js). */
+.team-head { max-width: 720px; margin: 16px auto 44px; text-align: center; }
+.team-head h1 { margin: 0 0 12px; font-family: var(--display); font-size: clamp(30px, 4vw, 44px); font-weight: 600; line-height: 1.15; color: #111111; }
+.team-head p { margin: 0; color: #6b6b6b; font-size: 18px; line-height: 1.5; }
+.team-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.team-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; background: #ffffff; box-shadow: 0 0 0 1px rgba(17, 17, 17, 0.08); transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease); }
+.team-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 2px #ef633d, 0 18px 40px rgba(17, 26, 41, 0.12); }
+.team-card:has(.team-link:focus-visible) { box-shadow: 0 0 0 3px #ef633d; }
+.team-card .artist-frame { border-radius: 0; background: #fff4f0; }
+.team-card .artist-frame img, .team-card .artist-fallback { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 0; transition: transform 0.5s var(--ease); }
+.team-card:hover .artist-frame img { transform: scale(1.03); }
+.team-body { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 20px; }
+.team-body h3 { margin: 0; font-family: var(--display); font-size: 18px; font-weight: 600; color: #111111; }
+.team-link { color: inherit; text-decoration: none; outline: none; }
+.team-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.team-body hr { width: 100%; height: 1px; margin: 2px 0; border: 0; background: #ececec; }
+.team-role { margin: 0; color: #ef633d; font-size: 14px; font-weight: 600; }
+.team-desc { margin: 0; color: #5f5f5f; font-size: 14px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.social-links { position: relative; z-index: 2; display: flex; gap: 12px; margin-top: auto; padding-top: 6px; }
+.social-links a { display: inline-flex; border-radius: 6px; color: #6b6b6b; transition: color 0.2s var(--ease), transform 0.15s var(--ease); }
+.social-links a:hover { color: #ef633d; transform: translateY(-1px); }
+.social-links a:focus-visible { outline: 2px solid #ef633d; outline-offset: 2px; }
+@media (max-width: 1180px) { .team-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+@media (max-width: 560px) { .team-grid { grid-template-columns: 1fr; } }
+
+/* Artist profile: editorial layout (components/ArtistProfile.js). */
+.artist-profile.editorial { display: block; max-width: 1120px; margin: 0 auto; padding: 28px 48px 88px; background: #ffffff; color: #1c1c1c; box-shadow: 0 0 0 100vmax #ffffff; clip-path: inset(0 -100vmax); }
+.ed-back { display: inline-block; margin-bottom: 32px; color: #6b6b6b; font-size: 14px; text-decoration: none; transition: color 0.2s var(--ease); }
+.ed-back:hover { color: #ef633d; }
+.ed-role { margin: 0 0 16px; color: #ef633d; font-size: 12px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; animation: ed-slide 0.5s 0.1s both; }
+.ed-row { display: flex; align-items: center; }
+.ed-photo { position: relative; flex: none; width: min(360px, 42vw); aspect-ratio: 18 / 25; overflow: hidden; background: #fff4f0; animation: ed-rise 0.7s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ed-photo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent 45%); }
+.ed-photo img, .ed-photo .artist-fallback.tall { display: block; width: 100%; height: 100%; max-height: none; object-fit: cover; border-radius: 0; box-shadow: none; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.ed-photo:hover img { transform: scale(1.05); }
+.ed-info { position: relative; left: -32px; z-index: 2; flex: 1; display: flex; flex-direction: column; gap: 44px; animation: ed-enter 0.6s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ed-name { width: fit-content; padding: 10px 18px 10px 22px; background: #ffffff; margin: 0; font-family: var(--body); font-size: clamp(44px, 6vw, 72px); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; color: #111111; }
+.ed-name span { font-family: var(--display); font-weight: 600; }
+.ed-details { display: flex; align-items: flex-start; gap: 32px; }
+.ed-cta { flex: none; width: 80px; height: 80px; display: grid; place-items: center; border: 1px solid #d4d4d4; border-radius: 50%; background: #ffffff; color: #525252; transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease), transform 0.2s var(--ease); }
+.ed-cta svg { transition: transform 0.3s var(--ease); }
+.ed-cta:hover { transform: scale(1.1); background: #ef633d; border-color: #ef633d; color: #ffffff; }
+.ed-cta:hover svg { transform: rotate(-45deg); }
+.ed-cta:active { transform: scale(0.95); }
+.ed-cta:focus-visible { outline: 3px solid #ef633d; outline-offset: 3px; }
+.ed-bio { max-width: 46ch; margin: 0; color: #5f5f5f; font-size: 15px; line-height: 1.8; text-wrap: pretty; }
+.ed-social { margin: 0; padding: 0 0 0 22px; }
+.ed-details { padding-left: 22px; }
+.ed-more { display: grid; gap: 28px; margin-top: 56px; }
+.ed-more .artist-panel, .ed-more .artist-video { margin-top: 0; }
+@keyframes ed-slide { from { opacity: 0; transform: translateX(-20px); } }
+@keyframes ed-rise { from { opacity: 0; transform: translateY(30px) scale(0.95); } }
+@keyframes ed-enter { from { opacity: 0; transform: translateX(40px); } }
+@media (max-width: 760px) {
+  .artist-profile.editorial { padding: 20px 20px 64px; }
+  .ed-row { flex-direction: column; align-items: stretch; }
+  .ed-photo { width: 100%; max-width: 420px; }
+  .ed-info { left: 0; gap: 24px; margin-top: 24px; }
+  .ed-cta { width: 64px; height: 64px; }
+  .ed-details { gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ed-role, .ed-photo, .ed-info { animation: none; }
+  .team-card, .team-card .artist-frame img, .ed-photo img, .ed-cta, .ed-cta svg { transition: none; }
+}
