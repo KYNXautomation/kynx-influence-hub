@@ -833,102 +833,6 @@ a.ghost { display: inline-flex; align-items: center; text-decoration: none; }
   border-bottom: 1px solid var(--line);
 }
 .brand-top .artist-showcase { margin: 0; }
-.viral-stage {
-  background: #ffffff;
-  padding: 18px 0 8px;
-}
-.viral-row {
-  display: grid;
-  grid-template-columns: minmax(72px, 1fr) minmax(0, 7.2fr) minmax(72px, 1fr);
-  gap: 14px;
-  align-items: stretch;
-  height: min(64vh, 560px);
-  padding: 0 18px;
-}
-.viral-peek,
-.viral-main {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #141414;
-}
-.viral-peek {
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-.viral-peek img,
-.viral-blur {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.viral-blur {
-  position: absolute;
-  inset: 0;
-  filter: blur(16px);
-  transform: scale(1.08);
-  opacity: 0.55;
-}
-.viral-main video {
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  width: auto;
-  max-width: 100%;
-  margin: 0 auto;
-  display: block;
-  object-fit: contain;
-}
-.viral-caption {
-  position: absolute;
-  z-index: 2;
-  right: 28px;
-  bottom: 22px;
-  max-width: 46%;
-  text-align: right;
-  color: #ffffff;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.65);
-}
-.viral-caption h2 {
-  margin: 0;
-  font-size: clamp(22px, 3vw, 34px);
-  letter-spacing: -0.03em;
-}
-.viral-caption p { margin: 4px 0 0; }
-.viral-views { font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
-.viral-arrow {
-  position: absolute;
-  z-index: 3;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #1c1c1c;
-  font-size: 28px;
-  line-height: 1;
-  cursor: pointer;
-}
-.viral-arrow.prev { left: 14px; }
-.viral-arrow.next { right: 14px; }
-.viral-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 0 6px;
-}
-.viral-dots button {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: #c8c8c8;
-}
-.viral-dots button[aria-current="true"] { background: #2a2a2a; }
 
 .home-artists {
   scroll-margin-top: 18px;
@@ -951,9 +855,6 @@ a.ghost { display: inline-flex; align-items: center; text-decoration: none; }
   .public-bar { flex-wrap: wrap; }
   .brand-top { grid-template-columns: 1fr; padding: 20px; }
   .home-artists { padding: 20px; }
-  .viral-row { grid-template-columns: 1fr; height: 72vh; padding: 0 12px; }
-  .viral-peek { display: none; }
-  .viral-caption { max-width: 70%; right: 16px; bottom: 16px; }
   .artist-filter-row { align-items: flex-start; }
   .artist-profile { grid-template-columns: 1fr; padding: 20px; gap: 24px; }
   .artist-photo img, .artist-fallback.tall { height: auto; max-height: 70vh; }
@@ -1521,8 +1422,7 @@ td { font-size: 14.5px; }
 
 /* Awards page. */
 .award { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 48px; align-items: center; padding: 40px 0; border-top: 1px solid var(--line); }
-.award-images { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.award-images img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 16px; box-shadow: 0 18px 40px rgba(20, 22, 26, 0.1); }
+.award-image { width: 100%; max-width: 520px; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 18px; box-shadow: 0 18px 40px rgba(20, 22, 26, 0.12); }
 .award-text h2 { margin: 0 0 8px; font-family: var(--display); font-size: clamp(30px, 3.4vw, 44px); letter-spacing: -0.03em; line-height: 1.05; }
 .award-body { margin: 18px 0 24px; max-width: 52ch; color: var(--muted); font-size: 16px; line-height: 1.7; }
 @media (max-width: 900px) { .award { grid-template-columns: 1fr; gap: 28px; } }
@@ -1532,3 +1432,11 @@ td { font-size: 14.5px; }
 .top-posts-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .post-embed { width: 100%; height: 640px; border: 1px solid #ececec; border-radius: 16px; background: #fafafa; }
 @media (max-width: 900px) { .top-posts-grid { grid-template-columns: 1fr; max-width: 420px; } }
+
+/* Home: featured award in place of the old campaign video carousel. */
+.home-award { padding-top: 56px; padding-bottom: 56px; }
+.award-featured { border-top: 0; padding: 0; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+.award-featured h2 { font-size: clamp(36px, 4.6vw, 60px); }
+.award-featured h2 em { color: var(--accent); font-style: normal; }
+.award-actions { justify-content: flex-start; flex-wrap: wrap; gap: 12px; }
+@media (max-width: 900px) { .award-featured { grid-template-columns: 1fr; } .home-award { padding-top: 32px; } }
