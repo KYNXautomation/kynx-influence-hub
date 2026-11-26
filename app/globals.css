@@ -1457,3 +1457,10 @@ img.avatar { box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px color-mix(in srgb, va
 .chatbot-panel form { align-items: flex-end; }
 .chatbot-panel textarea { flex: 1; min-width: 0; resize: none; field-sizing: content; min-height: 40px; max-height: 120px; overflow-y: auto; font: inherit; line-height: 1.4; }
 @media (max-width: 640px) { .chatbot { right: 16px; bottom: 16px; } .chatbot-tooltip { display: none; } }
+
+/* Talents page: near-deadline and overdue bookings stand out. */
+.talent-campaign .who { display: flex; align-items: center; gap: 12px; }
+.talent-campaign.due-near { border-color: var(--accent); }
+.talent-campaign.due-near .due-label { color: var(--accent); font-weight: 600; }
+.talent-campaign.due-over { border-width: 2px; background: color-mix(in srgb, var(--accent) 10%, var(--panel)); }
+.sheet-tabs .count-badge { margin-left: 6px; }

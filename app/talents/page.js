@@ -7,9 +7,9 @@ import { Avatar } from "../../components/Avatar";
 import { useRole } from "../../components/RoleProvider";
 import { useLedger } from "../../lib/useLedger";
 import { useTalents } from "../../lib/useTalents";
-import { blankTalent, contractOptions, presentTalent, rateChannels, talentManagers } from "../../lib/talents";
+import { blankTalent, contractOptions, daysLeft, presentTalent, rateChannels, talentManagers } from "../../lib/talents";
 import { categoryOptions } from "../../lib/model";
-import { campaignPath } from "../../lib/paths";
+import { campaignPath, creatorPath } from "../../lib/paths";
 import { formatDate, formatFollowers, formatNumber, formatPeso } from "../../lib/format";
 
 function TalentForm({ talent, standalone, canAssign, onSave, onCancel, onRemove }) {
@@ -101,6 +101,41 @@ function TalentForm({ talent, standalone, canAssign, onSave, onCancel, onRemove 
   );
 }
 
+const nearDays = 7;
+
+function dueLabel(days) {
+  if (days === null) return "No post date";
+  if (days < 0) return `Overdue by ${-days} day${days === -1 ? "" : "s"}`;
+  if (days === 0) return "Due today";
+  return `Due in ${days} day${days === 1 ? "" : "s"}`;
+}
+
+function CampaignRows({ rows, empty }) {
+  if (!rows.length) return <p className="empty">{empty}</p>;
+  return (
+    <div className="stack">
+      {rows.map((row) => (
+        <article className={`panel talent-campaign${row.days !== null && row.days <= nearDays ? " due-near" : ""}${row.days !== null && row.days < 0 ? " due-over" : ""}`} key={row.recordId}>
+          <span className="who">
+            <Avatar name={row.talent.name} src={row.talent.photo} />
+            <span>
+              <h3><Link href={campaignPath(row.campaignId)}>{row.name}</Link></h3>
+              <span className="meta">{[row.talent.name, row.brand, row.program].filter(Boolean).join(" · ")}</span>
+            </span>
+          </span>
+          <span className="status">{row.stage}</span>
+          <span>
+            <strong>{row.postDue ? formatDate(row.postDue) : "No date"}</strong>
+            <span className="meta due-label">{dueLabel(row.days)}</span>
+          </span>
+          <span className="meta">Manager {row.talent.manager}</span>
+          <Link className="ghost" href={creatorPath(row.recordId)}>Open record</Link>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export default function TalentsPage() {
   const { role, talentManager } = useRole();
   const { listRecords } = useLedger();
@@ -111,6 +146,7 @@ export default function TalentsPage() {
   const [editingId, setEditingId] = useState("");
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState("");
+  const [tab, setTab] = useState("ongoing");
 
   const isAdmin = role === "admin";
   const manager = isAdmin ? managerFilter : talentManager;
@@ -121,8 +157,19 @@ export default function TalentsPage() {
     .filter((talent) => manager === "all" || talent.manager === manager);
   const shown = mine
     .filter((talent) => !contractFilter || talent.contract === contractFilter)
-    .filter((talent) => !query || `${talent.name} ${talent.handle} ${talent.niche}`.toLowerCase().includes(query))
+    .filter((talent) => !query || `${talent.name} ${talent.handle} ${talent.niche} ${talent.ongoing.map((item) => `${item.name} ${item.brand}`).join(" ")}`.toLowerCase().includes(query))
     .sort((a, b) => Number(b.endingSoon) - Number(a.endingSoon) || b.followers - a.followers);
+
+  // Every ongoing booking of the shown talents, soonest post date first; no date goes last.
+  const ongoing = shown
+    .flatMap((talent) => talent.ongoing.map((item) => ({ ...item, talent, days: daysLeft(item.postDue) })))
+    .sort((a, b) => (a.days ?? Infinity) - (b.days ?? Infinity));
+  const near = ongoing.filter((row) => row.days !== null && row.days <= nearDays);
+  const tabs = [
+    ["ongoing", "Ongoing campaigns", ongoing.length],
+    ["near", "Near deadline", near.length],
+    ["talents", "Talents", shown.length],
+  ];
 
   function save(fields) {
     const { id, creatorId, name, handle, niche, followers, manager: owner, contract, contractEnd, onLeave, rates, email, phone, notes } = fields;
@@ -173,7 +220,7 @@ export default function TalentsPage() {
             {contractOptions.map((item) => <option key={item}>{item}</option>)}
           </select>
         </label>
-        <button className="apply" type="button" onClick={() => { setAdding(true); setEditingId(""); }}>Add talent</button>
+        <button className="apply" type="button" onClick={() => { setAdding(true); setEditingId(""); setTab("talents"); }}>Add talent</button>
       </div>
 
       {notice ? <p className="notice">{notice}</p> : null}
@@ -191,8 +238,19 @@ export default function TalentsPage() {
         </section>
       ) : null}
 
-      <p className="result-line">{shown.length} {shown.length === 1 ? "talent" : "talents"}</p>
-      {shown.length === 0 ? <p className="empty">No talents match. Try another search or contract type.</p> : (
+      <div className="sheet-tabs" role="tablist" aria-label="Talent views">
+        {tabs.map(([key, label, count]) => (
+          <button key={key} type="button" role="tab" aria-selected={tab === key} className={tab === key ? "active" : ""} onClick={() => setTab(key)}>
+            {label} <span className={count ? "count-badge" : "count-badge zero"}>{count}</span>
+          </button>
+        ))}
+      </div>
+
+      {tab === "ongoing" ? (
+        <CampaignRows rows={ongoing} empty="None of these talents is on an ongoing campaign. Campaigns show here once a specialist adds the talent on the tracker." />
+      ) : tab === "near" ? (
+        <CampaignRows rows={near} empty={`Nothing overdue or due in the next ${nearDays} days.`} />
+      ) : shown.length === 0 ? <p className="empty">No talents match. Try another search or contract type.</p> : (
         <div className="stack">
           {shown.map((talent) => (
             <article className="panel talent-card" key={talent.id}>
