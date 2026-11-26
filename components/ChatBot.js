@@ -105,7 +105,19 @@ export function ChatBot() {
             ) : null}
           </div>
           <form onSubmit={send}>
-            <input ref={input} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Type a message" aria-label="Message" maxLength={1000} />
+            <textarea
+              ref={input}
+              rows={1}
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={(event) => {
+                // Enter sends; Shift+Enter adds a line break.
+                if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) send(event);
+              }}
+              placeholder="Type a message (Shift+Enter for a new line)"
+              aria-label="Message"
+              maxLength={1000}
+            />
             <button type="submit" className="join" disabled={busy || !draft.trim()}>Send</button>
           </form>
         </section>
