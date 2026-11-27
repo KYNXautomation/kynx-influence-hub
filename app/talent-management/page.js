@@ -5,6 +5,7 @@ import { PublicFrame } from "../../components/PublicFrame";
 import { PublicFooter, StepGrid } from "../../components/PublicFooter";
 import { categoryOptions } from "../../lib/model";
 import { contactDetails } from "../../lib/brandSite";
+import { ArtistMarquee } from "../../components/ArtistMarquee";
 
 const steps = [
   ["Apply", "Tell us who you are, where you post, and the content you make."],
@@ -57,6 +58,7 @@ export default function TalentManagementPage() {
             <small>It takes about two minutes.</small>
           </div>
         </section>
+        <ArtistMarquee />
         <StepGrid steps={steps} />
 
         <section className="contact-block apply-block" id="apply">
