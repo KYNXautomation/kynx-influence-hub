@@ -5,6 +5,7 @@ import { PublicFrame } from "../../components/PublicFrame";
 import { PublicFooter } from "../../components/PublicFooter";
 import { useCollaborations } from "../../lib/collaborations";
 import { CollabGrid } from "../../components/CollabGrid";
+import { ViralStage } from "../../components/ViralStage";
 
 export default function CollaborationsPage() {
   const { items, ready } = useCollaborations();
@@ -28,7 +29,11 @@ export default function CollaborationsPage() {
         </div>
         <p className="lede collab-lede">Brands we have worked with, the KYNX artists on each campaign, and what we made.</p>
         {ready ? <CollabGrid items={shown} /> : null}
+        <section className="brand-section">
+          <div className="brand-section-head"><h2>Campaign films</h2></div>
+        </section>
       </main>
+      <ViralStage />
       <PublicFooter />
     </PublicFrame>
   );
