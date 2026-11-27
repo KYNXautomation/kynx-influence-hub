@@ -1,13 +1,21 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { creators } from "../lib/model";
 import { artistPath, artistPhoto } from "../lib/showcase";
 
-// The KYNX exclusive creators, sliding past in a loop. Pauses on hover and for reduced motion.
+// The KYNX exclusive creators, sliding past in a loop. Pauses on hover, on keyboard focus, and with the Pause button.
 const exclusives = creators.filter((creator) => creator.manager && artistPhoto(creator));
 
 export function ArtistMarquee() {
+  const [paused, setPaused] = useState(false);
   return (
-    <section className="marquee" aria-label="KYNX exclusive creators">
+    <section className={paused ? "marquee-wrap paused" : "marquee-wrap"} aria-label="KYNX exclusive creators">
+      <button className="marquee-toggle" type="button" onClick={() => setPaused(!paused)} aria-pressed={paused}>
+        {paused ? "▶ Play" : "❚❚ Pause"}
+      </button>
+      <div className="marquee">
       <div className="marquee-track">
         {/* The list is shown twice so the loop has no gap; the copy is hidden from screen readers. */}
         {[0, 1].map((copy) => (
@@ -22,6 +30,7 @@ export function ArtistMarquee() {
             ))}
           </ul>
         ))}
+      </div>
       </div>
     </section>
   );
