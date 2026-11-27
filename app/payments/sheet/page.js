@@ -213,7 +213,7 @@ export default function PaymentSheetPage() {
           {pasting ? (
             <section className="panel sheet-paste">
               <p className="meta">In Lark, select the rows from <b>PIC</b> to <b>MOA</b>, copy (Ctrl+C), and paste here (Ctrl+V). Add an amount column after MOA if you have one.</p>
-              <textarea value={pasteText} rows={6} placeholder="Nisha	Ken Eiron Mateo	Eironmateoo	09772567848	Susailene Mateo	Paid	9/27/2026	10/2/2026 …" onChange={(event) => setPasteText(event.target.value)} />
+              <textarea value={pasteText} rows={6} placeholder="PIC	Creator name	handle	09XXXXXXXXX	Payee name	Paid	9/27/2026	10/2/2026 …" onChange={(event) => setPasteText(event.target.value)} />
               <div className="button-row" style={{ justifyContent: "flex-start" }}>
                 <button className="apply" type="button" onClick={importPaste}>Add {rowsFromPaste(pasteText).length || ""} rows</button>
               </div>
