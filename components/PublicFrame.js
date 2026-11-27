@@ -10,7 +10,7 @@ const links = [
   ["/for-creators", "Creators"],
   ["/for-brands", "Brands"],
   ["/artists", "Artists"],
-  ["Services", [["/talent-management", "Talent management"], ["/affiliate-marketing", "Affiliate marketing"]]],
+  ["Services", [["/talent-management", "Talent Management"], ["/affiliate-marketing", "Affiliate Marketing"]]],
   ["/collaborations", "Our works"],
   ["/awards", "Awards"],
   ["/news", "News"],
