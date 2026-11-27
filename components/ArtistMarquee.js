@@ -7,7 +7,7 @@ import { artistPath, artistPhoto } from "../lib/showcase";
 import { useGlide } from "../lib/useGlide";
 
 // The KYNX exclusive creators in a scrollable row that glides on its own (about 30px a second).
-// Visitors can scroll or drag it with the scrollbar; it pauses while the mouse or keyboard focus is on it.
+// Visitors can scroll or drag it with the scrollbar; it keeps moving under the mouse.
 const exclusives = creators.filter((creator) => creator.manager && artistPhoto(creator));
 
 export function ArtistMarquee() {
