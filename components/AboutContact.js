@@ -5,7 +5,7 @@ import { contactDetails } from "../lib/brandSite";
 
 const blank = { first: "", last: "", email: "", updates: false, message: "" };
 
-export function AboutContact() {
+export function AboutContact({ about = true }) {
   const [form, setForm] = useState(blank);
   const [note, setNote] = useState("");
 
@@ -32,7 +32,7 @@ export function AboutContact() {
 
   return (
     <div className="about-contact">
-      <section className="about-block" id="about">
+      {about ? <section className="about-block" id="about">
         <div>
           <h2>Who we are</h2>
           <p>
@@ -46,7 +46,7 @@ export function AboutContact() {
           <span>KYN<em>X.</em></span>
           <small>Influence Hub</small>
         </div>
-      </section>
+      </section> : null}
 
       <section className="contact-block" id="contact-us">
         <div>

@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { PublicFrame } from "../../components/PublicFrame";
 import { PublicFooter, StepGrid } from "../../components/PublicFooter";
+import { CollabGrid } from "../../components/CollabGrid";
+import { ViralStage } from "../../components/ViralStage";
+import { useCollaborations } from "../../lib/collaborations";
 
 const steps = [
   ["Share your goal", "Tell us what you want to grow: sales, sign-ups, installs, or awareness for a launch."],
@@ -11,6 +14,7 @@ const steps = [
 ];
 
 export default function ForBrandsPage() {
+  const { items, ready } = useCollaborations();
   return (
     <PublicFrame>
       <main className="landing">
@@ -26,7 +30,18 @@ export default function ForBrandsPage() {
           </div>
         </section>
         <StepGrid steps={steps} />
+        <section className="brand-section">
+          <div className="brand-section-head">
+            <h2>Collaborations and case studies</h2>
+            <Link className="text-link" href="/collaborations">See all collaborations</Link>
+          </div>
+          {ready ? <CollabGrid items={items.filter((item) => item.published)} /> : null}
+        </section>
+        <section className="brand-section">
+          <div className="brand-section-head"><h2>Campaign films</h2></div>
+        </section>
       </main>
+      <ViralStage />
       <PublicFooter />
     </PublicFrame>
   );

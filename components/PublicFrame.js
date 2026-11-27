@@ -6,8 +6,9 @@ import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
   ["/how-it-works", "How it works"],
-  ["/for-creators", "For creators"],
-  ["/for-brands", "For brands"],
+  ["/for-creators", "Creators"],
+  ["/talent-management", "Talent management"],
+  ["/for-brands", "Brands"],
   ["/artists", "Artists"],
   ["/collaborations", "Collaborations"],
   ["/awards", "Awards"],

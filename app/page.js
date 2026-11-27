@@ -16,7 +16,7 @@ export default function HomePage() {
       <section className="landing home-award">
         <Award award={awards[0]} featured />
       </section>
-      <AboutContact />
+      <AboutContact about={false} />
       <PublicFooter />
     </PublicFrame>
   );
