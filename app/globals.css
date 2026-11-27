@@ -1440,5 +1440,5 @@ td { font-size: 14.5px; }
 .award-featured h2 em { color: var(--accent); font-style: normal; }
 .award-actions { justify-content: flex-start; flex-wrap: wrap; gap: 12px; }
 @media (max-width: 900px) { .award-featured { grid-template-columns: 1fr; } .home-award { padding-top: 32px; } }
-.home-how { padding-top: 0; padding-bottom: 72px; }
-.home-how .intro-band { border-top: 1px solid var(--line); }
+.home-how { padding-bottom: 24px; }
+.home-award { border-top: 1px solid var(--line); }

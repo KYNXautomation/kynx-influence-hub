@@ -10,11 +10,11 @@ import { awards } from "../lib/awards";
 export default function HomePage() {
   return (
     <PublicFrame>
-      <section className="landing home-award">
-        <Award award={awards[0]} featured />
-      </section>
       <section className="landing home-how">
         <HowItWorks />
+      </section>
+      <section className="landing home-award">
+        <Award award={awards[0]} featured />
       </section>
       <AboutContact />
       <PublicFooter />
