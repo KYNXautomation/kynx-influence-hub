@@ -1557,9 +1557,8 @@ td { font-size: 14.5px; }
 
 /* Artist slideshow (components/ArtistMarquee.js). */
 .marquee { margin: 40px calc(50% - 50vw) 8px; overflow: hidden; mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
-.marquee-track { display: flex; width: max-content; animation: marquee 70s linear infinite; }
-.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
-.marquee-list { display: flex; gap: 18px; margin: 0; padding: 0 9px; list-style: none; }
+.marquee-track { display: flex; gap: 18px; width: max-content; padding-left: max(16px, calc(50vw - 590px)); }
+.marquee-list { display: flex; gap: 18px; margin: 0; padding: 0; list-style: none; }
 .marquee-list a { position: relative; display: block; width: 220px; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 18px; color: #ffffff; text-decoration: none; }
 .marquee-list img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease); }
 .marquee-list a::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 50%); }
@@ -1567,11 +1566,9 @@ td { font-size: 14.5px; }
 .marquee-list a:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
 .marquee-list span { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1; display: grid; font-family: var(--display); font-weight: 600; font-size: 17px; line-height: 1.2; }
 .marquee-list small { font-family: var(--body); font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
-@keyframes marquee { to { transform: translateX(-50%); } }
 @media (max-width: 640px) { .marquee-list a { width: 160px; } }
 .marquee-wrap { display: grid; justify-items: end; gap: 10px; margin-top: 32px; }
 .marquee-wrap .marquee { justify-self: stretch; margin-top: 0; }
-.marquee-wrap.paused .marquee-track { animation-play-state: paused; }
 .marquee-toggle { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--text); font: 500 13px var(--body); cursor: pointer; }
 .marquee-toggle:hover { border-color: var(--accent); }
 .marquee-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
