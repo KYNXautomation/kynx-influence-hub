@@ -18,7 +18,7 @@ export default function CollaborationsPage() {
     <PublicFrame>
       <main className="landing news-page collab-page">
         <div className="news-rule">
-          <h1>Collaborations</h1>
+          <h1>Our works</h1>
           <div className="news-filters" role="tablist" aria-label="Brand">
             {brands.map((name) => (
               <button key={name} type="button" role="tab" aria-selected={brand === name} className={brand === name ? "active" : undefined} onClick={() => setBrand(name)}>

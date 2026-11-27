@@ -5,7 +5,7 @@ import { artistNames, coverFor } from "../lib/collaborations";
 
 // Collaboration cards linking to each case study. Used on Collaborations and Brands.
 export function CollabGrid({ items }) {
-  if (!items.length) return <p className="empty">No collaborations here yet.</p>;
+  if (!items.length) return <p className="empty">No works here yet.</p>;
   return (
     <div className="news-grid">
       {items.map((item) => {

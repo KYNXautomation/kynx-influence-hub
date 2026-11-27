@@ -19,7 +19,7 @@ function CaseStudy() {
     return (
       <main className="landing">
         <p className="empty">That collaboration is not on the list.</p>
-        <Link className="text-link" href="/collaborations">See all collaborations</Link>
+        <Link className="text-link" href="/collaborations">See all our works</Link>
       </main>
     );
   }
@@ -28,7 +28,7 @@ function CaseStudy() {
 
   return (
     <main className="landing collab-case">
-      <Link className="text-link" href="/collaborations">← All collaborations</Link>
+      <Link className="text-link" href="/collaborations">← All our works</Link>
       <header className="collab-head">
         <p className="eyebrow">{item.brand}{item.date ? ` · ${item.date}` : ""}</p>
         <h1>{item.title}</h1>

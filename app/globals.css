@@ -1443,12 +1443,29 @@ td { font-size: 14.5px; }
 .home-how { padding-bottom: 24px; }
 .home-award { border-top: 1px solid var(--line); }
 
-/* Campaign films (components/ViralStage.js): a gliding row of playing films, like the artist slideshow. */
+/* Campaign films (components/ViralStage.js): the former large film cards, gliding like the artist slideshow. */
 .film-marquee { margin: 18px 0 8px; }
-.film-list a { width: 260px; aspect-ratio: 9 / 16; background: #141414; }
-.film-list video { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s var(--ease); }
-.film-list a:hover video { transform: scale(1.03); }
-@media (max-width: 640px) { .film-list a { width: 190px; } }
+.marquee-list.film-list a { width: min(76vw, 1100px); height: min(64vh, 560px); aspect-ratio: auto; background: #141414; }
+.marquee-list.film-list a::after { display: none; }
+.marquee-list .film-blur { position: absolute; inset: 0; filter: blur(16px); transform: scale(1.08); opacity: 0.55; }
+.marquee-list a:hover .film-blur { transform: scale(1.08); }
+.film-list video { position: relative; z-index: 1; display: block; height: 100%; width: auto; max-width: 100%; margin: 0 auto; object-fit: contain; }
+.film-caption { position: absolute; z-index: 2; right: 28px; bottom: 22px; max-width: 46%; text-align: right; color: #ffffff; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.65); }
+.film-caption h3 { margin: 0; font-family: var(--display); font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.03em; }
+.film-caption p { margin: 4px 0 0; }
+.film-views { font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) { .marquee-list.film-list a { width: 88vw; height: 72vh; } .film-caption { max-width: 70%; right: 16px; bottom: 16px; } }
+
+/* Services dropdown in the public menu (components/PublicFrame.js). */
+.nav-drop { position: relative; }
+.nav-drop summary { list-style: none; cursor: pointer; color: var(--muted); font-size: 15px; transition: color 0.2s var(--ease); }
+.nav-drop summary::-webkit-details-marker { display: none; }
+.nav-drop summary::after { content: " ▾"; font-size: 11px; }
+.nav-drop summary:hover, .nav-drop summary[aria-current="page"], .nav-drop[open] summary { color: var(--text); }
+.nav-drop-menu { position: absolute; z-index: 30; top: calc(100% + 12px); left: -14px; display: grid; gap: 4px; min-width: 200px; padding: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
+.nav-drop-menu a { padding: 8px 10px; border-radius: 8px; }
+.nav-drop-menu a::after { display: none; }
+.nav-drop-menu a:hover, .nav-drop-menu a[aria-current="page"] { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--text); }
 
 /* Brands page sections. */
 .brand-section { margin-top: 72px; }

@@ -32,8 +32,8 @@ export default function ForBrandsPage() {
         <StepGrid steps={steps} />
         <section className="brand-section">
           <div className="brand-section-head">
-            <h2>Collaborations and case studies</h2>
-            <Link className="text-link" href="/collaborations">See all collaborations</Link>
+            <h2>Our works and case studies</h2>
+            <Link className="text-link" href="/collaborations">See all our works</Link>
           </div>
           {ready ? <CollabGrid items={items.filter((item) => item.published)} /> : null}
         </section>

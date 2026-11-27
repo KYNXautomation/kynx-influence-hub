@@ -80,11 +80,14 @@ export function ViralStage() {
             {slides.map((creator) => (
               <li key={creator.id}>
                 <Link href={`/artists/${creator.id}`} tabIndex={copy ? -1 : undefined}>
+                  <img className="film-blur" src={artistPhoto(creator)} alt="" draggable="false" />
                   <StageFilm src={`${videoRoot}/${creator.videoId}/playlist.m3u8`} poster={artistPhoto(creator)} />
-                  <span>
-                    {creator.name}
-                    <small>{creator.brand ? `For ${creator.brand} · ` : ""}{creator.views > 0 ? `${formatNumber(creator.views)} views` : "Campaign film"}</small>
-                  </span>
+                  <div className="film-caption">
+                    <h3>{creator.name}</h3>
+                    {creator.brand ? <p>For {creator.brand}</p> : null}
+                    <p>KYNX campaign film</p>
+                    <p className="film-views">{creator.views > 0 ? formatNumber(creator.views) : "—"} generated views</p>
+                  </div>
                 </Link>
               </li>
             ))}
