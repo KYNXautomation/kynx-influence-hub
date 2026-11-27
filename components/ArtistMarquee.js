@@ -5,10 +5,10 @@ import Link from "next/link";
 import { creators } from "../lib/model";
 import { artistPath, artistPhoto } from "../lib/showcase";
 
-// The KYNX exclusive creators as a slideshow: every 3 seconds the row slides over by one artist.
+// The KYNX exclusive creators as a slideshow: every 5 seconds the row slides over by one artist.
 // Pauses on hover, on keyboard focus, and with the Pause button.
 const exclusives = creators.filter((creator) => creator.manager && artistPhoto(creator));
-const everyMs = 3000;
+const everyMs = 5000;
 const gap = 18;
 
 export function ArtistMarquee() {
@@ -51,7 +51,7 @@ export function ArtistMarquee() {
         <div
           ref={track}
           className="marquee-track"
-          style={{ transform: `translateX(-${index * step}px)`, transition: animate ? "transform 0.8s var(--ease)" : "none" }}
+          style={{ transform: `translateX(-${index * step}px)`, transition: animate ? "transform 1.2s var(--ease)" : "none" }}
           onTransitionEnd={wrap}
         >
           {/* The list is shown twice so the loop has no gap; the copy is hidden from screen readers. */}
