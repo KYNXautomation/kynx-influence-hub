@@ -1443,108 +1443,12 @@ td { font-size: 14.5px; }
 .home-how { padding-bottom: 24px; }
 .home-award { border-top: 1px solid var(--line); }
 
-/* Campaign video carousel (components/ViralStage.js), on the Brands page. */
-.viral-stage {
-  background: #ffffff;
-  padding: 18px 0 8px;
-}
-.viral-row {
-  display: grid;
-  grid-template-columns: minmax(72px, 1fr) minmax(0, 7.2fr) minmax(72px, 1fr);
-  gap: 14px;
-  align-items: stretch;
-  height: min(64vh, 560px);
-  padding: 0 18px;
-}
-.viral-peek,
-.viral-main {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #141414;
-}
-.viral-peek {
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-.viral-peek img,
-.viral-blur {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.viral-blur {
-  position: absolute;
-  inset: 0;
-  filter: blur(16px);
-  transform: scale(1.08);
-  opacity: 0.55;
-}
-.viral-main video {
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  width: auto;
-  max-width: 100%;
-  margin: 0 auto;
-  display: block;
-  object-fit: contain;
-}
-.viral-caption {
-  position: absolute;
-  z-index: 2;
-  right: 28px;
-  bottom: 22px;
-  max-width: 46%;
-  text-align: right;
-  color: #ffffff;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.65);
-}
-.viral-caption h2 {
-  margin: 0;
-  font-size: clamp(22px, 3vw, 34px);
-  letter-spacing: -0.03em;
-}
-.viral-caption p { margin: 4px 0 0; }
-.viral-views { font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
-.viral-arrow {
-  position: absolute;
-  z-index: 3;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #1c1c1c;
-  font-size: 28px;
-  line-height: 1;
-  cursor: pointer;
-}
-.viral-arrow.prev { left: 14px; }
-.viral-arrow.next { right: 14px; }
-.viral-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 0 6px;
-}
-.viral-dots button {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: #c8c8c8;
-}
-.viral-dots button[aria-current="true"] { background: #2a2a2a; }
-@media (max-width: 980px) {
-  .viral-row { grid-template-columns: 1fr; height: 72vh; padding: 0 12px; }
-  .viral-peek { display: none; }
-  .viral-caption { max-width: 70%; right: 16px; bottom: 16px; }
-}
+/* Campaign films (components/ViralStage.js): a gliding row of playing films, like the artist slideshow. */
+.film-marquee { margin: 18px 0 8px; }
+.film-list a { width: 260px; aspect-ratio: 9 / 16; background: #141414; }
+.film-list video { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s var(--ease); }
+.film-list a:hover video { transform: scale(1.03); }
+@media (max-width: 640px) { .film-list a { width: 190px; } }
 
 /* Brands page sections. */
 .brand-section { margin-top: 72px; }
