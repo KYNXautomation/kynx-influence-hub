@@ -1567,3 +1567,22 @@ td { font-size: 14.5px; }
 .marquee-list span { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1; display: grid; font-family: var(--display); font-weight: 600; font-size: 17px; line-height: 1.2; }
 .marquee-list small { font-family: var(--body); font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
 @media (max-width: 640px) { .marquee-list a { width: 160px; } }
+
+/* About page (app/about/page.js): light intro, then a dark band. */
+.about-intro { padding-top: 72px; padding-bottom: 64px; }
+.about-intro h1 { display: inline-block; padding-bottom: 14px; border-bottom: 2px solid var(--text); font-size: clamp(28px, 3vw, 36px); }
+.about-intro .lede { max-width: 62ch; margin-top: 22px; }
+.about-band { background: #14161a; color: #f2efeb; }
+.about-band-inner { max-width: 1120px; margin: 0 auto; padding: 88px 48px 96px; display: grid; gap: 56px; }
+.about-group { padding-top: 48px; border-top: 1px solid rgba(242, 239, 235, 0.25); }
+.about-band-inner > .about-group:first-child { padding-top: 0; border-top: 0; }
+.about-group h2 { margin: 0 0 36px; text-align: center; font-family: var(--display); font-size: 24px; font-weight: 600; }
+.team-people { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px 24px; text-align: center; }
+.team-people li { display: grid; gap: 4px; }
+.team-people strong { font-size: 16px; font-weight: 500; }
+.team-people small { color: rgba(242, 239, 235, 0.65); font-size: 12px; }
+.team-people.large strong { font-family: var(--display); font-size: 22px; }
+.about-values { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.about-values strong { display: block; margin-bottom: 10px; font-family: var(--display); font-size: 18px; }
+.about-values p { margin: 0; color: rgba(242, 239, 235, 0.72); line-height: 1.65; font-size: 15px; }
+@media (max-width: 900px) { .about-values { grid-template-columns: 1fr; } .about-band-inner { padding: 56px 20px 64px; } }

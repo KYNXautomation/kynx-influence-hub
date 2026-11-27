@@ -13,6 +13,7 @@ const links = [
   ["/collaborations", "Collaborations"],
   ["/awards", "Awards"],
   ["/news", "News"],
+  ["/about", "About"],
   ["/contact", "Contact"],
 ];
 
